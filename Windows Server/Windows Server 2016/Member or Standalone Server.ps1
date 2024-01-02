@@ -384,3 +384,9 @@ Get-Acl -Path "HKLM:\SECURITY"
 
 'Get-Acl -Path "HKLM:\SOFTWARE"'
 Get-Acl -Path "HKLM:\SOFTWARE"
+
+"WN16-0O-000080"
+"$FormatEnumerationLimit=-1"
+$FormatEnumerationLimit=-1
+"Get-AppLockerPolicy -Effective -Xml | Format-Table -AutoSize"
+Get-AppLockerPolicy -Effective -Xml | Format-Table -AutoSize
