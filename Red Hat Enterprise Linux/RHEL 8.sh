@@ -2219,3 +2219,9 @@ echo "CM-7, AC-3"
 echo "View all policies for the system"
 echo "getsebool -a"
 getsebool -a
+echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+echo "Check License status."
+echo "subscription-manager list --available --all"
+subscription-manager list --available --all
+echo "End of Script."
