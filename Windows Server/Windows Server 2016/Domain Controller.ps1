@@ -106,6 +106,11 @@ foreach ($fileshare in $fileshares) {
 Get-PSDrive -PSProvider FileSystem | ForEach-Object {Get-ChildItem -Path $_.Root -Include *.p12,*.pfx -File -Recurse -ErrorAction SilentlyContinue}
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"WN16-00-000280"
+"Get-NetFirewallProfile"
+Get-NetFirewallProfile
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN16-00-000300"
 "Get-WindowsFeature"
 Get-WindowsFeature
@@ -486,3 +491,10 @@ Get-Acl -Path "HKLM:\SECURITY"
 
 'Get-Acl -Path "HKLM:\SOFTWARE"'
 Get-Acl -Path "HKLM:\SOFTWARE"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN16-0O-000080"
+"$FormatEnumerationLimit=-1"
+$FormatEnumerationLimit=-1
+"Get-AppLockerPolicy -Effective -Xml | Format-Table -AutoSize"
+Get-AppLockerPolicy -Effective -Xml | Format-Table -AutoSize
