@@ -97,6 +97,10 @@ foreach ($fileshare in $fileshares) {
 "Get-PSDrive -PSProvider FileSystem | ForEach-Object {Get-ChildItem -Path $_.Root -Include *.p12,*.pfx -File -Recurse -ErrorAction SilentlyContinue}"
 Get-PSDrive -PSProvider FileSystem | ForEach-Object {Get-ChildItem -Path $_.Root -Include *.p12,*.pfx -File -Recurse -ErrorAction SilentlyContinue}
 
+"WN16-00-000280"
+"Get-NetFirewallProfile"
+Get-NetFirewallProfile
+
 "WN16-00-000300"
 "Get-WindowsFeature"
 Get-WindowsFeature
