@@ -72,7 +72,7 @@ Invoke-Expression -Command "wmic printer get Name, PortName, DriverName, ShareNa
  if ($lastLogin -eq $null) {
  $lastLogin = 'Never'
  }
- Write-Host $user.Name $lastLogin $enabled 
+ Write-Output $user.Name $lastLogin $enabled 
 }
 
 "WN22-00-000200"
