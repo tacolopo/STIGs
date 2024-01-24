@@ -7,6 +7,7 @@
 Get-LocalUser -Name * | Select-Object *
 
 "WN22-00-000060"
+#CHANGE TO INVOKE EXPRESSION
 'Net User [application account name] | Find /i "Password Last Set"'
 Net User [application account name] | Find /i "Password Last Set"
 
