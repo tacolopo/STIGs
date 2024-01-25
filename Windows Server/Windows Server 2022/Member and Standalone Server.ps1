@@ -6,6 +6,10 @@
 "Get-LocalUser -Name * | Select-Object *"
 Get-LocalUser -Name * | Select-Object *
 
+"WN22-00-000040"
+'Get-LocalGroupMember "Backup Operators"'
+Get-LocalGroupMember "Backup Operators"
+
 "WN22-00-000060"
 #CHANGE TO INVOKE EXPRESSION
 'Net User [application account name] | Find /i "Password Last Set"'
