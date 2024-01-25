@@ -91,6 +91,10 @@ Get-CimInstance -Class Win32_Useraccount -Filter "PasswordExpires=False and Loca
 "Get-PSDrive -PSProvider FileSystem | ForEach-Object {Get-ChildItem -Path $_.Root -Include *.p12,*.pfx -File -Recurse -ErrorAction SilentlyContinue}"
 Get-PSDrive -PSProvider FileSystem | ForEach-Object {Get-ChildItem -Path $_.Root -Include *.p12,*.pfx -File -Recurse -ErrorAction SilentlyContinue}
 
+"WN22-00-000250"
+"Get-BitLockerVolume"
+Get-BitLockerVolume
+
 "WN22-00-000270"
 "Get-WindowsFeature"
 Get-WindowsFeature
