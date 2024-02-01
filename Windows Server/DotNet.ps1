@@ -36,9 +36,9 @@ Invoke-Expression -Command 'FINDSTR /i /s "defaultProxy" c:\*.exe.config'
 'FINDSTR /i /s "defaultProxy" c:\*.machine.config'
 Invoke-Expression -Command 'FINDSTR /i /s "defaultProxy" c:\*.machine.config'
 
-"APPNET0066"
+"APPNET0067"
 'FINDSTR /i /s "ewtEnable enabled" c:\*'
-Invoke-Expression -Command 'FINDSTR /i /s "ewtEnable enabled" c:\*'
+Invoke-Expression -Command 'FINDSTR /i /s "ewtEnable enabled" c:\*.exe.config'
 
 "APPNET0048, APPNET0052, APPNET0060, APPNET0062, APPNET0071"
 "Get-Content -Path C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config"
