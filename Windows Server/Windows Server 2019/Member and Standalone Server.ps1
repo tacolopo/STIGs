@@ -368,7 +368,7 @@ gpresult /z
  if ($lastLogin -eq $null) {
  $lastLogin = 'Never'
  }
- Write-Host $user.Name $lastLogin $enabled 
+ Write-Output $user.Name $lastLogin $enabled 
 }
 
 "WN19-00-000080"
