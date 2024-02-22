@@ -304,8 +304,8 @@ Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\D
 Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch\
 
 "WN19-CC-000140"
-"Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group` Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\"
-Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group` Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\
+'Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\"'
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}\"
 
 "WN19-CC-000180, WN19-CC-000190"
 "Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51\"
