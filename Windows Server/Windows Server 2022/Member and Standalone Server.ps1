@@ -5,23 +5,28 @@
 "WN22-00-000020"
 "Get-LocalUser -Name * | Select-Object *"
 Get-LocalUser -Name * | Select-Object *
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000040"
 'Get-LocalGroupMember "Backup Operators"'
 Get-LocalGroupMember "Backup Operators"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000060"
 #CHANGE TO INVOKE EXPRESSION
 'Net User [application account name] | Find /i "Password Last Set"'
 Net User [application account name] | Find /i "Password Last Set"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000090"
 "Get-TPM"
 Get-TPM
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000100, WN22-00-000460, WN22-00-000470"
 "Get-ComputerInfo"
 Get-ComputerInfo
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000110"
 'get-service | where {$_.DisplayName -Like "*Defender*"} | Select Status,DisplayName'
@@ -30,24 +35,29 @@ get-service | where {$_.DisplayName -Like "*Defender*"} | Select Status,DisplayN
 get-service | where {$_.DisplayName -Like "*symantec*"} | Select Status,DisplayName
 'get-service | where {$_.DisplayName -Like "*mcafee*"} | Select Status,DisplayName'
 get-service | where {$_.DisplayName -Like "*mcafee*"} | Select Status,DisplayName
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000130"
 "Get-Volume"
 Get-Volume
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000140"
 'Invoke-Expression -Command "icacls c:\"'
 Invoke-Expression -Command "icacls c:\"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000150"
 'Invoke-Expression -Command "icacls c:\program files"'
 Invoke-Expression -Command "icacls 'c:\program files'"
 'Invoke-Expression -Command "icacls c:\program files (x86)"'
 Invoke-Expression -Command "icacls 'c:\program files (x86)'"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000160"
 'Invoke-Expression -Command "icacls c:\windows"'
 Invoke-Expression -Command "icacls c:\windows"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000170"
 'Get-Acl -Path "HKLM:\SYSTEM"'
@@ -56,6 +66,7 @@ Get-Acl -Path "HKLM:\SYSTEM"
 Get-Acl -Path "HKLM:\SECURITY"
 'Get-Acl -Path "HKLM:\SOFTWARE"'
 Get-Acl -Path "HKLM:\SOFTWARE"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000180"
 "Get Printer Properties"
@@ -66,6 +77,7 @@ foreach ($printer in $printers)
 }
 'Invoke-Expression -Command "wmic printer get Name, PortName, DriverName, ShareName"'
 Invoke-Expression -Command "wmic printer get Name, PortName, DriverName, ShareName"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000190"
 "Check for outdated accounts"
@@ -78,35 +90,42 @@ Invoke-Expression -Command "wmic printer get Name, PortName, DriverName, ShareNa
  }
  Write-Output $user.Name $lastLogin $enabled 
 }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000200"
 'Get-CimInstance -Class Win32_Useraccount -Filter "PasswordRequired=False and LocalAccount=True" | FT Name, PasswordRequired, Disabled, LocalAccount'
 Get-CimInstance -Class Win32_Useraccount -Filter "PasswordRequired=False and LocalAccount=True" | FT Name, PasswordRequired, Disabled, LocalAccount
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000210"
 'Get-CimInstance -Class Win32_Useraccount -Filter "PasswordExpires=False and LocalAccount=True" | FT Name, PasswordExpires, Disabled, LocalAccount'
 Get-CimInstance -Class Win32_Useraccount -Filter "PasswordExpires=False and LocalAccount=True" | FT Name, PasswordExpires, Disabled, LocalAccount
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000240"
 "Get-PSDrive -PSProvider FileSystem | ForEach-Object {Get-ChildItem -Path $_.Root -Include *.p12,*.pfx -File -Recurse -ErrorAction SilentlyContinue}"
 Get-PSDrive -PSProvider FileSystem | ForEach-Object {Get-ChildItem -Path $_.Root -Include *.p12,*.pfx -File -Recurse -ErrorAction SilentlyContinue}
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000250"
 "Get-BitLockerVolume"
 Get-BitLockerVolume
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000270"
 "Get-WindowsFeature"
 Get-WindowsFeature
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000280"
 "Get-NetFirewallProfile"
 Get-NetFirewallProfile
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000300"
 "Search-ADAccount -AccountExpiring | FT Name, AccountExpirationDate"
 Search-ADAccount -AccountExpiring | FT Name, AccountExpirationDate
-
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 "WN22-00-000310"
 "Only applies if emergency accounts in use"
 "Net user [username]"
