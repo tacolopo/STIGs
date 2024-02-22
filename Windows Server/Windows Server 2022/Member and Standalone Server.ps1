@@ -129,10 +129,12 @@ Search-ADAccount -AccountExpiring | FT Name, AccountExpirationDate
 "WN22-00-000310"
 "Only applies if emergency accounts in use"
 "Net user [username]"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000320"
 "Get-WindowsFeature | Where Name -eq Fax"
 Get-WindowsFeature | Where Name -eq Fax
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000330"
 "Get-WindowsFeature | Where Name -eq Web-Ftp-Service"
