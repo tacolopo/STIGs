@@ -844,8 +844,8 @@ grep -i tls_cacert /etc/sssd/sssd.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-07-040201"
-echo "grep -r kernel.randomize_va_space /run/sysctl.d/* /etc/sysctl.d/* /usr/local/lib/sysctl.d/* "
-grep -r kernel.randomize_va_space /run/sysctl.d/* /etc/sysctl.d/* /usr/local/lib/sysctl.d/* 
+echo "grep -r kernel.randomize_va_space /run/sysctl.d/* /etc/sysctl.d/* /usr/local/lib/sysctl.d/* /usr/lib/sysctl.d/* /lib/sysctl.d/* /etc/sysctl.conf 2> /dev/null"
+grep -r kernel.randomize_va_space /run/sysctl.d/* /etc/sysctl.d/* /usr/local/lib/sysctl.d/* /usr/lib/sysctl.d/* /lib/sysctl.d/* /etc/sysctl.conf 2> /dev/null
 echo "/sbin/sysctl -a | grep kernel.randomize_va_space "
 /sbin/sysctl -a | grep kernel.randomize_va_space 
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -1166,7 +1166,10 @@ rpm -Va --noconfig | grep '^..5'
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-07-020019 & RHEL-07-032000"
-echo "Deviation per BARA"
+echo "rpm -qa | grep mcafeetp"
+rpm -qa | grep mcafeetp
+echo "ps -ef | grep -i mfetpd"
+ps -ef | grep -i mfetpd
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-07-010062"
