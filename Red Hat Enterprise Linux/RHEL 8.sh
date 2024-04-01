@@ -324,8 +324,8 @@ echo "--------------------------------------------------------------------------
 echo "RHEL-08-010430"
 echo "sysctl kernel.randomize_va_space"
 sysctl kernel.randomize_va_space
-echo "grep -r kernel.randomize_va_space /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r kernel.randomize_va_space /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r kernel.randomize_va_space /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r kernel.randomize_va_space /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-010440"
@@ -466,8 +466,8 @@ echo "--------------------------------------------------------------------------
 echo "RHEL-08-010671"
 echo "sysctl kernel.core_pattern"
 sysctl kernel.core_pattern
-echo "grep -r kernel.core_pattern /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf"
-grep -r kernel.core_pattern /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf
+echo "grep -r kernel.core_pattern /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r kernel.core_pattern /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-010672"
@@ -1438,106 +1438,106 @@ echo "--------------------------------------------------------------------------
 echo "RHEL-08-040210"
 echo "sysctl net.ipv6.conf.default.accept_redirects"
 sysctl net.ipv6.conf.default.accept_redirects
-echo "grep -r net.ipv6.conf.default.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf "
-grep -r net.ipv6.conf.default.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf 
+echo "grep -r net.ipv6.conf.default.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv6.conf.default.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040220"
 echo "sysctl net.ipv4.conf.all.send_redirects"
 sysctl net.ipv4.conf.all.send_redirects
-echo "grep -r net.ipv4.conf.all.send_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.conf.all.send_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf 
+echo "grep -r net.ipv4.conf.all.send_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.conf.all.send_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040230"
 echo "sysctl net.ipv4.icmp_echo_ignore_broadcasts"
 sysctl net.ipv4.icmp_echo_ignore_broadcasts
-echo "grep -r net.ipv4.icmp_echo_ignore_broadcasts /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.icmp_echo_ignore_broadcasts /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf 
+echo "grep -r net.ipv4.icmp_echo_ignore_broadcasts /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.icmp_echo_ignore_broadcasts /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf 
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040240"
 echo "sysctl net.ipv6.conf.all.accept_source_route"
 sysctl net.ipv6.conf.all.accept_source_route
-echo "grep -r net.ipv6.conf.all.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf "
-grep -r net.ipv6.conf.all.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf 
+echo "grep -r net.ipv6.conf.all.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv6.conf.all.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf 
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040250"
 echo "sysctl net.ipv6.conf.default.accept_source_route"
 sysctl net.ipv6.conf.default.accept_source_route
-echo "grep -r net.ipv6.conf.default.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv6.conf.default.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv6.conf.default.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv6.conf.default.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040260"
 echo "sysctl net.ipv6.conf.all.forwarding"
 sysctl net.ipv6.conf.all.forwarding
-echo "grep -r net.ipv6.conf.all.forwarding /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv6.conf.all.forwarding /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv6.conf.all.forwarding /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv6.conf.all.forwarding /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040261"
 echo "sysctl net.ipv6.conf.all.accept_ra"
 sysctl net.ipv6.conf.all.accept_ra
-echo "grep -r net.ipv6.conf.all.accept_ra /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv6.conf.all.accept_ra /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv6.conf.all.accept_ra /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv6.conf.all.accept_ra /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040262"
 echo "sysctl net.ipv6.conf.default.accept_ra"
 sysctl net.ipv6.conf.default.accept_ra
-echo "grep -r net.ipv6.conf.default.accept_ra /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv6.conf.default.accept_ra /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv6.conf.default.accept_ra /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv6.conf.default.accept_ra /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040270"
 echo "sysctl net.ipv4.conf.default.send_redirects"
 sysctl net.ipv4.conf.default.send_redirects
-echo "grep -r net.ipv4.conf.default.send_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.conf.default.send_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv4.conf.default.send_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.conf.default.send_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040280"
 echo "sysctl net.ipv6.conf.all.accept_redirects"
 sysctl net.ipv6.conf.all.accept_redirects
-echo "grep -r net.ipv6.conf.all.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv6.conf.all.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv6.conf.all.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv6.conf.all.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040281"
 echo "sysctl kernel.unprivileged_bpf_disabled"
 sysctl kernel.unprivileged_bpf_disabled
-echo "grep -r kernel.unprivileged_bpf_disabled /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r kernel.unprivileged_bpf_disabled /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r kernel.unprivileged_bpf_disabled run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r kernel.unprivileged_bpf_disabled run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040282"
 echo "sysctl kernel.yama.ptrace_scope"
 sysctl kernel.yama.ptrace_scope
-echo "grep -r kernel.yama.ptrace_scope /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r kernel.yama.ptrace_scope /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r kernel.yama.ptrace_scope run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r kernel.yama.ptrace_scope run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040283"
 echo "sysctl kernel.kptr_restrict"
 sysctl kernel.kptr_restrict
-echo "grep -r kernel.kptr_restrict /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf"
-grep -r kernel.kptr_restrict /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf
+echo "grep -r kernel.kptr_restrict run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r kernel.kptr_restrict run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040284"
 echo "sysctl user.max_user_namespaces"
 sysctl user.max_user_namespaces
-echo "grep -r user.max_user_namespaces /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r user.max_user_namespaces /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r user.max_user_namespaces run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r user.max_user_namespaces run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040285"
 echo "sysctl net.ipv4.conf.all.rp_filter"
 sysctl net.ipv4.conf.all.rp_filter
-echo "grep -r net.ipv4.conf.all.rp_filter /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.conf.all.rp_filter /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv4.conf.all.rp_filter run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.conf.all.rp_filter run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040290"
@@ -1774,40 +1774,43 @@ echo "--------------------------------------------------------------------------
 echo "RHEL-08-040209"
 echo "sysctl net.ipv4.conf.default.accept_redirects"
 sysctl net.ipv4.conf.default.accept_redirects
-echo "grep -r net.ipv4.conf.default.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.conf.default.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf 
+echo "grep -r net.ipv4.conf.default.accept_redirects run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.conf.default.accept_redirects run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040239"
 echo "sysctl net.ipv4.conf.all.accept_source_route"
 sysctl net.ipv4.conf.all.accept_source_route
-echo "grep -r net.ipv4.conf.all.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.conf.all.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv4.conf.all.accept_source_route run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.conf.all.accept_source_route run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040249"
 echo "sysctl net.ipv4.conf.default.accept_source_route"
 sysctl net.ipv4.conf.default.accept_source_route
-echo "grep -r net.ipv4.conf.default.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.conf.default.accept_source_route /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv4.conf.default.accept_source_route run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.conf.default.accept_source_route run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040279"
 echo "sysctl net.ipv4.conf.all.accept_redirects"
 sysctl net.ipv4.conf.all.accept_redirects
-echo "grep -r net.ipv4.conf.all.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.conf.all.accept_redirects /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv4.conf.all.accept_redirects run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.conf.all.accept_redirects run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-040286"
 echo "sysctl net.core.bpf_jit_harden"
 sysctl net.core.bpf_jit_harden
-echo "grep -r net.core.bpf_jit_harden /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.core.bpf_jit_harden /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf 
+echo "grep -r net.core.bpf_jit_harden run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.core.bpf_jit_harden run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-010001"
-echo "Deviation per BARA"
+echo "rpm -qa | grep -i mcafeetp"
+rpm -qa | grep -i mcafeetp
+echo "ps -ef | grep -i mfetpd"
+ps -ef | grep -i mfetpd
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-020027"
@@ -1825,8 +1828,8 @@ echo "--------------------------------------------------------------------------
 echo "RHEL-08-040259"
 echo "sysctl net.ipv4.conf.all.forwarding"
 sysctl net.ipv4.conf.all.forwarding
-echo "grep -r net.ipv4.conf.all.forwarding /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf"
-grep -r net.ipv4.conf.all.forwarding /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf
+echo "grep -r net.ipv4.conf.all.forwarding run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf"
+grep -r net.ipv4.conf.all.forwarding run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
 echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 echo "RHEL-08-010121"
