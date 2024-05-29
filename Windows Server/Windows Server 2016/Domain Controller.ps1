@@ -382,6 +382,10 @@ Invoke-Expression -Command "net share"
 Invoke-Expression -Command "icacls c:\Windows\SYSVOL"
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"WN16-DC-000160"
+Invoke-Expression -Command 'dsquery * "cn=Default Query Policy,cn=Query-Policies,cn=Directory Service, cn=Windows NT,cn=Services,cn=Configuration,dc=[forest-name]" -attr LDAPAdminLimits'
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN16-DC-000300"
 "Get-ADUser -Filter * | FT Name, UserPrincipalName, Enabled"
 Get-ADUser -Filter * | FT Name, UserPrincipalName, Enabled
