@@ -324,7 +324,7 @@ Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows` NT\CurrentVersion\Winlo
 "Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard"
 Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard
 
-"WN16-MS-000310, WN16-SO-000020, WN16-SO-000050, WN16-SO-000260, WN16-SO-000270, WN16-SO-000290, WN16-SO-000320, WN16-SO-000350, WN16-SO-000380"
+"WN16-MS-000310, WN16-SO-000020, WN16-SO-000050, WN16-SO-000260, WN16-SO-000270, WN16-SO-000290, WN16-SO-000320, WN16-SO-000350, WN16-SO-000360, WN16-SO-000380"
 "Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"
 Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
 
