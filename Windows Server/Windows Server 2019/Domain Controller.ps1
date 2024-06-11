@@ -390,6 +390,10 @@ gpresult /z
 "Search-ADAccount -AccountInactive -UsersOnly -TimeSpan 35.00:00:00"
 Search-ADAccount -AccountInactive -UsersOnly -TimeSpan 35.00:00:00
 
+"Organizational Units"
+Get-ADOrganizationalUnit -Filter 'Name -like "*"' | Format-Table Name, DistinguishedName -A
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN19-00-000080"
 "Prevent output truncation:"
 "$FormatEnumerationLimit=-1"
