@@ -497,6 +497,10 @@ Get-Acl -Path "HKLM:\SECURITY"
 Get-Acl -Path "HKLM:\SOFTWARE"
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"Organizational Units"
+Get-ADOrganizationalUnit -Filter 'Name -like "*"' | Format-Table Name, DistinguishedName -A
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN16-0O-000080"
 "$FormatEnumerationLimit=-1"
 $FormatEnumerationLimit=-1
