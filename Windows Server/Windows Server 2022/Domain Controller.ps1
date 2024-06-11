@@ -377,6 +377,10 @@ Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Session` Manager\
 "Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments\"
 Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments\
 
+"Organizational Units"
+Get-ADOrganizationalUnit -Filter 'Name -like "*"' | Format-Table Name, DistinguishedName -A
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN22-00-000080"
 "Prevent output truncation:"
 "$FormatEnumerationLimit=-1"
