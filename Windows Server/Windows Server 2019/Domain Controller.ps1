@@ -218,12 +218,12 @@ Invoke-Expression -Command "icacls 'c:\program files (x86)'"
 Invoke-Expression -Command "icacls c:\windows"
 
 "WN19-00-000170"
-'Get-Acl -Path "HKLM:\SYSTEM"'
-Get-Acl -Path "HKLM:\SYSTEM"
-'Get-Acl -Path "HKLM:\SECURITY"'
-Get-Acl -Path "HKLM:\SECURITY"
-'Get-Acl -Path "HKLM:\SOFTWARE"'
-Get-Acl -Path "HKLM:\SOFTWARE"
+"Get-Acl -Path HKLM:SECURITY | % { $_.access }"
+Get-Acl -Path HKLM:SECURITY | % { $_.access }
+"Get-Acl -Path HKLM:SOFTWARE | % { $_.access }"
+Get-Acl -Path HKLM:SOFTWARE | % { $_.access }
+"Get-Acl -Path HKLM:SYSTEM | % { $_.access }"
+Get-Acl -Path HKLM:SYSTEM | % { $_.access }
 
 "WN19-DC-000010"
 "Get-LocalGroupMember Administrators"
