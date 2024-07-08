@@ -2227,4 +2227,10 @@ echo "--------------------------------------------------------------------------
 echo "Check License status."
 echo "subscription-manager list --available --all"
 subscription-manager list --available --all
+
+echo "Check Splunk configuration if applicable"
+echo "rpm -qa | grep splunk"
+rpm -qa | grep splunk
+echo "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 echo "End of Script."
