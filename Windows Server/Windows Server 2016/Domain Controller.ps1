@@ -532,12 +532,12 @@ Get-ADGroupMember -Identity $BuiltSchemaAdminCheck.Name -Recursive | Select-Obje
 $BuiltInStorageAdminCheck = Get-ADGroup -Identity 'Storage Replica Administrators'
 Get-ADGroupMember -Identity $BuiltStorageAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
 "Get-ADGroupMember -Identity $BuiltStorageAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
-
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
-
 
 "WN16-0O-000080"
 "$FormatEnumerationLimit=-1"
 $FormatEnumerationLimit=-1
 "Get-AppLockerPolicy -Effective -Xml | Format-Table -AutoSize"
 Get-AppLockerPolicy -Effective -Xml | Format-Table -AutoSize
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+"End of Script"
