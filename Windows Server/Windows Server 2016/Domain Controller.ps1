@@ -505,8 +505,33 @@ Get-ADOrganizationalUnit -Filter 'Name -like "*"' | Format-Table Name, Distingui
 $BuiltInAdminCheck = Get-ADGroup -Identity Administrators
 "Get-ADGroupMember -Identity $BuiltInAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
 Get-ADGroupMember -Identity $BuiltInAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
-$BuiltInDHCPAdminCheck = Get-ADGroup -Identity 'DHCP Administrators'
-
+$BuiltInDhcpAdminCheck = Get-ADGroup -Identity 'DHCP Administrators'
+"Get-ADGroupMember -Identity $BuiltInDhcpAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltInDhcpAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInDnsAdminCheck = Get-ADGroup -Identity DnsAdmins
+"Get-ADGroupMember -Identity $BuiltInDnsAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltInDnsAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInDomainAdminCheck = Get-ADGroup -Identity 'Domain Admins'
+"Get-ADGroupMember -Identity $BuiltInDomainAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltInDomainAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInEnterpriseAdminCheck = Get-ADGroup -Identity 'Enterprise Admins'
+"Get-ADGroupMember -Identity $BuiltInDomainAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltInEnterpriseAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInEnterpriseKeyAdminCheck = Get-ADGroup -Identity 'Enterprise Key Admins'
+"Get-ADGroupMember -Identity $BuiltInEnterpriseKeyAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltInEnterpriseKeyAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInHyperVAdminCheck = Get-ADGroup -Identity 'Hyper-V Administrators'
+"Get-ADGroupMember -Identity $BuiltInHyperVAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltInHyperVAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInKeyAdminCheck = Get-ADGroup -Identity 'Key Admins'
+"Get-ADGroupMember -Identity $BuiltInKeyAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltInKeyAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInSchemaAdminCheck = Get-ADGroup -Identity 'Schema Admins'
+"Get-ADGroupMember -Identity $BuiltSchemaAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltSchemaAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInStorageAdminCheck = Get-ADGroup -Identity 'Storage Replica Administrators'
+Get-ADGroupMember -Identity $BuiltStorageAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+"Get-ADGroupMember -Identity $BuiltStorageAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
