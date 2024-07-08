@@ -503,6 +503,17 @@ Get-ADGroupMember -Identity $BuiltStorageAdminCheck.Name -Recursive | Select-Obj
 "Get-ADGroupMember -Identity $BuiltStorageAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"AD.0260"
+"Get Membership groups related to AD Delegation"
+$ADDelegationsGroups = Get-ADGroup -SearchBase "DC=blank DC=blank DC=blank" -Properties CanonicalName,Description,info | Sort-Object Name
+foreach($Groupcheck in $ADDelegationsGroups){
+	Write-Host "Group Name: $($Groupcheck.Name) ($($Groupcheck.DistinguishedName))"
+	Write-Host "Description: $($Groupcheck.Description)"
+	Write-Host "Members:"
+	Get-ADGroupMember -Identity $Groupcheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+}
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN22-00-000080"
 "Prevent output truncation:"
 "$FormatEnumerationLimit=-1"
