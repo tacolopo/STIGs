@@ -53,7 +53,7 @@ Invoke-Expression -Command "icacls c:\windows"
 Get-Acl -Path HKLM:SECURITY | % { $_.access }
 "Get-Acl -Path HKLM:SOFTWARE | % { $_.access }"
 Get-Acl -Path HKLM:SOFTWARE | % { $_.access }
-"Get-Acl -Path HKLM:SOFTWARE | % { $_.access }"
+"Get-Acl -Path HKLM:SYSTEM | % { $_.access }"
 Get-Acl -Path HKLM:SYSTEM | % { $_.access }
 
 "WN16-00-000200"
