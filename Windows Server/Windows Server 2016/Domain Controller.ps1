@@ -501,6 +501,16 @@ Get-Acl -Path "HKLM:\SOFTWARE"
 Get-ADOrganizationalUnit -Filter 'Name -like "*"' | Format-Table Name, DistinguishedName -A
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"AD.0260"
+$BuiltInAdminCheck = Get-ADGroup -Identity Administrators
+"Get-ADGroupMember -Identity $BuiltInAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}"
+Get-ADGroupMember -Identity $BuiltInAdminCheck.Name -Recursive | Select-Object -ExpandProperty Name | Sort-Object | ForEach-Object {Write-Host `t$_}
+$BuiltInDHCPAdminCheck = Get-ADGroup -Identity 'DHCP Administrators'
+
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
 "WN16-0O-000080"
 "$FormatEnumerationLimit=-1"
 $FormatEnumerationLimit=-1
