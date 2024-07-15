@@ -126,6 +126,7 @@ Get-NetFirewallProfile
 "Search-ADAccount -AccountExpiring | FT Name, AccountExpirationDate"
 Search-ADAccount -AccountExpiring | FT Name, AccountExpirationDate
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN22-00-000310"
 "Only applies if emergency accounts in use"
 "Net user [username]"
