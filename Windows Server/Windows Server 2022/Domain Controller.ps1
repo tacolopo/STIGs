@@ -1,5 +1,5 @@
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
-"Security Technical Implementation Guide (STIG) Microsoft Windows Server 2022 V1R4 Domain Controller"
+"Security Technical Implementation Guide (STIG) Microsoft Windows Server 2022 V1R5 Domain Controller"
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000020"
