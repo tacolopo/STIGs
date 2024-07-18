@@ -29,6 +29,8 @@ get-service | where {$_.DisplayName -Like "*Defender*"} | Select Status,DisplayN
 get-service | where {$_.DisplayName -Like "*symantec*"} | Select Status,DisplayName
 'get-service | where {$_.DisplayName -Like "*mcafee*"} | Select Status,DisplayName'
 get-service | where {$_.DisplayName -Like "*mcafee*"} | Select Status,DisplayName
+'get-service | where {$_.DisplayName -Like "*trellix*"} | Select Status,DisplayName'
+get-service | where {$_.DisplayName -Like "*trellix*"} | Select Status,DisplayName
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN22-00-000130"
