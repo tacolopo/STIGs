@@ -28,6 +28,11 @@ Get-TPM
 Get-ComputerInfo
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"Get Installed Software/Apps"
+"Get-WmiObject -Class Win32_Product"
+Get-WmiObject -Class Win32_Product
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN22-00-000110"
 'get-service | where {$_.DisplayName -Like "*Defender*"} | Select Status,DisplayName'
 get-service | where {$_.DisplayName -Like "*Defender*"} | Select Status,DisplayName

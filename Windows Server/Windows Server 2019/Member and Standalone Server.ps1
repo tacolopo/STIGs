@@ -440,6 +440,11 @@ Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Tran
 Get-WindowsFeature
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"Get Installed Software/Apps"
+"Get-WmiObject -Class Win32_Product"
+Get-WmiObject -Class Win32_Product
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "Get Verbose Group Policy Information"
 "gpresult /z"
 gpresult /z

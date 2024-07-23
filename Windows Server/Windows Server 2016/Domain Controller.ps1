@@ -188,6 +188,11 @@ Invoke-Expression -Command "W32tm /query /configuration"
 Get-ComputerInfo
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"Get Installed Software/Apps"
+"Get-WmiObject -Class Win32_Product"
+Get-WmiObject -Class Win32_Product
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN16-AU-000030"
 "(get-acl C:\Windows\System32\winevt\Logs\Application.evtx).access | ft IdentityReference,FileSystemRights,AccessControlType,IsInherited,InheritanceFlags -auto"
 (get-acl C:\Windows\System32\winevt\Logs\Application.evtx).access | ft IdentityReference,FileSystemRights,AccessControlType,IsInherited,InheritanceFlags -auto
