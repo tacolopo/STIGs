@@ -552,6 +552,17 @@ foreach($Groupcheck in $ADDelegationsGroups){
 }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"SecureBoot Checks"
+"Confirm-SecureBootUEFI"
+Confirm-SecureBootUEFI
+"Get-SecureBootUEFI -Name PK | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name PK | Get-UEFIDatabaseSigner | Format-List
+"Get-SecureBootUEFI -Name KEK | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name KEK | Get-UEFIDatabaseSigner | Format-List
+"Get-SecureBootUEFI -Name db | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name db | Get-UEFIDatabaseSigner | Format-List
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN16-0O-000080"
 "$FormatEnumerationLimit=-1"
 $FormatEnumerationLimit=-1

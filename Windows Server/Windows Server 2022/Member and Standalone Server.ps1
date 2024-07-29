@@ -470,6 +470,17 @@ Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Session` Manager\
 Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments\
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"SecureBoot Checks"
+"Confirm-SecureBootUEFI"
+Confirm-SecureBootUEFI
+"Get-SecureBootUEFI -Name PK | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name PK | Get-UEFIDatabaseSigner | Format-List
+"Get-SecureBootUEFI -Name KEK | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name KEK | Get-UEFIDatabaseSigner | Format-List
+"Get-SecureBootUEFI -Name db | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name db | Get-UEFIDatabaseSigner | Format-List
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN22-00-000080"
 "Prevent output truncation:"
 "$FormatEnumerationLimit=-1"

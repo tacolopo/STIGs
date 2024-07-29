@@ -463,6 +463,17 @@ gpresult /z
 }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"SecureBoot Checks"
+"Confirm-SecureBootUEFI"
+Confirm-SecureBootUEFI
+"Get-SecureBootUEFI -Name PK | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name PK | Get-UEFIDatabaseSigner | Format-List
+"Get-SecureBootUEFI -Name KEK | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name KEK | Get-UEFIDatabaseSigner | Format-List
+"Get-SecureBootUEFI -Name db | Get-UEFIDatabaseSigner | Format-List"
+Get-SecureBootUEFI -Name db | Get-UEFIDatabaseSigner | Format-List
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 "WN19-00-000080"
 "Prevent output truncation:"
 "$FormatEnumerationLimit=-1"
