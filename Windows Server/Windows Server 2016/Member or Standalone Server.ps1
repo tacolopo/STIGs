@@ -61,6 +61,7 @@ Invoke-Expression -Command "icacls c:\windows"
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN16-00-000190"
+#Note - The Security Key requires System level access to read, so this output will be empty if the script is run directly through a PowerShell session.
 "Get-Acl -Path HKLM:SECURITY | % { $_.access }"
 Get-Acl -Path HKLM:SECURITY | % { $_.access }
 "Get-Acl -Path HKLM:SOFTWARE | % { $_.access }"
@@ -593,6 +594,7 @@ Get-SecureBootUEFI -Name db | Get-UEFIDatabaseSigner | Format-List
 
 'Get-Acl -Path "HKLM:\SYSTEM"'
 Get-Acl -Path "HKLM:\SYSTEM"
+#Note - The Security Key requires System level access to read, so this output will be empty if the script is run directly through a PowerShell session.
 'Get-Acl -Path "HKLM:\SECURITY"'
 Get-Acl -Path "HKLM:\SECURITY"
 'Get-Acl -Path "HKLM:\SOFTWARE"'

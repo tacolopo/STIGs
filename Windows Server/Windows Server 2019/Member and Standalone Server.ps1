@@ -241,6 +241,7 @@ Invoke-Expression -Command "icacls c:\windows"
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN19-00-000170"
+#Note - The Security Key requires System level access to read, so this output will be empty if the script is run directly through a PowerShell session.
 "Get-Acl -Path HKLM:SECURITY | % { $_.access }"
 Get-Acl -Path HKLM:SECURITY | % { $_.access }
 "Get-Acl -Path HKLM:SOFTWARE | % { $_.access }"
