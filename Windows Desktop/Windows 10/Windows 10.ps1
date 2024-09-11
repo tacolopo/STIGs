@@ -142,10 +142,77 @@ if ($neverExpireAccounts -ne $null) { Write-Output "WN10-00-000090" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# "WN10-00-000095"
+# "WN10-00-000095, WN10-SO-000160"
 # "Permissions for system files and directories must conform to minimum requirements."
 $everyoneincludesanonymous = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
-if ($everyoneincludesanonymous.everyoneincludesanonymous -ne 0) { Write-Output "WN10-00-000095" }
+if ($everyoneincludesanonymous.everyoneincludesanonymous -ne 0) { Write-Output "WN10-00-000095, WN10-SO-000160" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-00-000100"
+# "Internet Information System (IIS) or its subcomponents must not be installed"
+$allInstalledSoftware = Get-WmiObject -Class Win32_Product
+$iisInstalled = $allInstalledSoftware | Where-Object { $_.Name -like "*Internet Information Services*" }
+if ($iisInstalled -ne $null) { Write-Output "WN10-00-000100" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-00-000105"
+# "Simple Network Management Protocol (SNMP) must not be installed on the system."
+$snmpInstalled = $allInstalledSoftware | Where-Object { $_.Name -like "*SNMP*" }
+if ($snmpInstalled -ne $null) { Write-Output "WN10-00-000105" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+#"WN10-00-000110"
+# "Simple TCPIP Services must not be installed on the system."
+$simpletcpipInstalled = $allInstalledSoftware | Where-Object { $_.Name -like "*Simple TCPIP Services*" }
+if ($simpletcpipInstalled -ne $null) { Write-Output "WN10-00-000105" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000115"
+# "The Telnet Client must not be installed on the system."
+$telnetclientInstalled = $allInstalledSoftware | Where-Object { $_.Name -like "*Telnet Client*" }
+if ($telnetclientInstalled -ne $null) { Write-Output "WN10-00-000115" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000120"
+# "The TFTP Client must not be installed on the system."
+$tftpclientInstalled = $allInstalledSoftware | Where-Object { $_.Name -like "*TFTP Client*" }
+if ($tftpclientInstalled -ne $null) { Write-Output "WN10-00-000120" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000130"
+# "Software certificate installation files must be removed from Windows 10."
+$job = Start-Job -ScriptBlock {
+    Get-ChildItem -Path C:\ -Include *.p12,*.pfx -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+}
+$lingeringCertificateFiles = if (Wait-Job $job -Timeout 60) {
+    Receive-Job $job
+} else {
+    Stop-Job $job
+    $null
+}
+Remove-Job $job -Force
+if ($lingeringCertificateFiles -ne $null) { Write-Output "WN10-00-000130"; Write-Output $lingeringCertificateFiles }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000135"
+# "Check Windows Firewall is running"
+$windowsFirewall = get-service | where {$_.DisplayName -Like "*firewall*"} | Select Status,DisplayName | Out-String
+if ($windowsFirewall.Contains('Running Windows Defender Firewall') -eq $false) { Write-Output "WN10-00-000135" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000140"
+# "Inbound exceptions to the firewall on Windows 10 domain workstations must only allow authorized remote management hosts."
+# "Currently no policies on what is allowed"
+$firewallInboundCheck = Get-NetFirewallRule -Direction Inbound | Format-Table -Property Name, DisplayName, Enabled, Action, Protocol, LocalPort, RemotePort | Out-String
+if ($firewallInboundCheck.Contains('Microsoft Photos')) { Write-Output "WN10-00-000140" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000145"
+# "Data Execution Prevention (DEP) must be configured to at least OptOut."
+$optOutTest = bcdedit /enum "{current}" | Out-String
+if ($optOutTest.Contains("OptOut") -eq $false -and $optOutTest.Contains("AlwaysOn") -eq $false) { Write-Output "WN10-00-000145" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-00-000150"
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
