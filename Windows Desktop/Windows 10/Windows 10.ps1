@@ -132,6 +132,20 @@ if ($hyperVAdmins -ne $null) { Write-Output "WN10-00-000080" }
 $localUsers = Get-LocalUser
 $localUserNames = $localUsers.Name
 $allowedUsers = @("built in admin", "built in guest", "DefaultAccount", "noaccess", "defaultuser0", "WDAGUtilityAccount")
-if ($localUserNames | Where-Object { $_ -notin $allowedUsers }) { Write-Output "WN10-00-000060" }
+if ($localUserNames | Where-Object { $_ -notin $allowedUsers }) { Write-Output "WN10-00-000085" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000090"
+# "Accounts must be configured to require password expiration."
+$neverExpireAccounts = Get-LocalUser | Where-Object { $_.PasswordExpires -eq $null -and $_.Enabled -eq $true }
+if ($neverExpireAccounts -ne $null) { Write-Output "WN10-00-000090" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000095"
+# "Permissions for system files and directories must conform to minimum requirements."
+$everyoneincludesanonymous = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
+if ($everyoneincludesanonymous.everyoneincludesanonymous -ne 0) { Write-Output "WN10-00-000095" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 
