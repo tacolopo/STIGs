@@ -84,7 +84,7 @@ $alternateOS = bcdedit /enum all | Out-String
 if ($alternateOS.Contains("Windows 11") -or $alternateOS.Contains("Linux")) { Write-Output "WN10-00-000055" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-#Confirm whether print is allowed
+"Confirm whether print is allowed"
 # "WN10-00-000060"
 # "Confirm only approved shares exist"
 $shares = Get-WmiObject -Class Win32_Share
@@ -93,9 +93,9 @@ $shareNames = $shares.Name
 if ($shareNames | Where-Object { $_ -notin $allowedShares }) { Write-Output "WN10-00-000060" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-#Confirm whether noaccess account is allowed
+"Confirm whether noaccess account is allowed"
 # "WN10-00-000065"
-# Confirm accounts last login
+# "Confirm accounts last login
 ([ADSI]('WinNT://{0}' -f $env:COMPUTERNAME)).Children | Where { $_.SchemaClassName -eq 'user' } | ForEach {
    $user = ([ADSI]$_.Path)
    $lastLogin = $user.Properties.LastLogin.Value
@@ -105,5 +105,33 @@ if ($shareNames | Where-Object { $_ -notin $allowedShares }) { Write-Output "WN1
    }
    if ($enabled -eq $true -and $user.Name -ne 'noaccess') { Write-Host "WN10-00-000065 $($user.Name) $($lastLogin) $($enabled)" }
 }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+#find out what accounts are approved to be administrators
+"WN10-00-000070"
+"Administrators group must only contain approved accounts"
+Get-LocalGroupMember Administrators
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"Confirm no backup operators account in BARA"
+# "WN10-00-000075"
+# "Only accounts responsible for the backup operations must be members of the Backup Operators group."
+$backupOperators = Get-LocalGroupMember "Backup Operators"
+if ($backupOperators -ne $null) { Write-Output "WN10-00-000075" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000080"
+# "Only authorized user accounts must be allowed to create or run virtual machines"
+$hyperVAdmins = Get-LocalGroupMember "Hyper-V Administrators"
+if ($hyperVAdmins -ne $null) { Write-Output "WN10-00-000080" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"!!!!!!!!!!!!!!!!!!alter xyz to your organization local accounts!!!!!!!!!!!!!!!!!!!"
+# "WN10-00-000085"
+# "If local users other than the accounts listed below exist on a workstation in a domain, this is a finding."
+$localUsers = Get-LocalUser
+$localUserNames = $localUsers.Name
+$allowedUsers = @("built in admin", "built in guest", "DefaultAccount", "noaccess", "defaultuser0", "WDAGUtilityAccount")
+if ($localUserNames | Where-Object { $_ -notin $allowedUsers }) { Write-Output "WN10-00-000060" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
