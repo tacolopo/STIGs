@@ -2,7 +2,9 @@
 "Security Technical Implementation Guide (STIG) Microsoft Windows 10 V3R1"
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-#Comment out all STIG ID Titles and descriptions. Print Out STIG ID for fail.
+#TO DO
+# Comment out all STIG ID Titles and descriptions. Print Out STIG ID for fail.
+# EDIT DEFENDER CHECKS TO TRELLIX CHECKS
 
 "WN10-00-000005"
 "Verify domain-joined systems are using Windows 10 Enterprise Edition 64-bit version"
@@ -67,7 +69,8 @@ $os.OsBuildNumber #19045
 
 # "WN10-00-000045"
 # "Check Defender antivirus is running"
-$defender = get-service | where {$_.DisplayName -Like "*Defender*"} | Select Status,DisplayName | Out-String
+$allWindowsServices = Get-Service
+$defender = $allWindowsServices | where {$_.DisplayName -Like "*Defender*"} | Select Status,DisplayName | Out-String
 if ($defender.Contains('Running Microsoft Defender Antivirus') -eq $false) { Write-Output "WN10-00-000045" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -196,7 +199,7 @@ if ($lingeringCertificateFiles -ne $null) { Write-Output "WN10-00-000130"; Write
 
 # "WN10-00-000135"
 # "Check Windows Firewall is running"
-$windowsFirewall = get-service | where {$_.DisplayName -Like "*firewall*"} | Select Status,DisplayName | Out-String
+$windowsFirewall = $allWindowsServices | where {$_.DisplayName -Like "*firewall*"} | Select Status,DisplayName | Out-String
 if ($windowsFirewall.Contains('Running Windows Defender Firewall') -eq $false) { Write-Output "WN10-00-000135" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -213,6 +216,42 @@ $optOutTest = bcdedit /enum "{current}" | Out-String
 if ($optOutTest.Contains("OptOut") -eq $false -and $optOutTest.Contains("AlwaysOn") -eq $false) { Write-Output "WN10-00-000145" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000150"
+# "WN10-00-000150"
+# "(SEHOP) must be enabled. This is applicable to Windows 10 prior to v1709."
+$exceptionChainValidation = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Session` Manager\kernel\
+if ($exceptionChainValidation.DisableExceptionChainValidation -ne 0) { Write-Output "WN10-00-000150" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000155"
+# "Ensure PowerShell 2.0 is disabled"
+$v2ps = Get-WindowsOptionalFeature -Online | Where FeatureName -like *PowerShellv2* | Out-String
+if ($v2ps.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000155" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000160"
+# "The Server Message Block (SMB) v1 protocol must be disabled on the system."
+$smbv1Check =Get-WindowsOptionalFeature -Online | Where FeatureName -eq SMB1Protocol | Out-String
+if ($smbv1Check.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000160" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000165"
+# "The SMBv1 protocol must be disabled on the SMB server. If WN16-00-000160 passes, this is N/A."
+$smbv1ServerCheck = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\
+if ($smbv1ServerCheck.SMB1 -ne 0 -and $smbv1Check.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000165" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000170"
+# "(SMB) v1 protocol must be disabled on the SMB client. If WN16-00-000160 passes, this is N/A."
+$smbv1ClientCheck = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\mrxsmb10\
+if ($smbv1ClientCheck.Start -ne 4 -and $smbv1Check.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000170" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-00-000175" (Dev.)
+"The Secondary Logon service must be disabled on Windows 10."
+$secondaryLogonCheck = $allWindowsServices | where {$_.DisplayName -Like "*Secondary*"} | Select Status,DisplayName | Out-String
+if ($secondaryLogonCheck.Contains('Running') -eq $true) { Write-Output "WN10-00-000175" }
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-00-000190"
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
