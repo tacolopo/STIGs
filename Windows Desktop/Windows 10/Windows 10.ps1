@@ -252,6 +252,215 @@ $secondaryLogonCheck = $allWindowsServices | where {$_.DisplayName -Like "*Secon
 if ($secondaryLogonCheck.Contains('Running') -eq $true) { Write-Output "WN10-00-000175" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+"Go back to add in valid group and user SIDs to compare to"
 "WN10-00-000190"
+"Orphaned security identifiers (SIDs) must be removed from user rights on Windows 10."
+# Grab the content and then compare it to data I pulled from a domain-joined workstation
+$userSIDs = @()
+$groupSIDs = @()
+$exportPath = "$env:TEMP\secpol.inf"
+secedit /export /cfg $exportPath
+$policyContent = Get-Content $exportPath
+$sidLines = $policyContent | Select-String "Se"
+$unresolvedSids = $sidLines | Where-Object { $_ -match 'S-1-' }
+
+Import-Module ActiveDirectory
+
+# Get all AD users and groups and their SIDs
+Get-ADUser -Filter * -Property SID | Select-Object -Property Name, SID
+Get-ADGroup -Filter * -Property SID | Select-Object -Property Name, SID
+
+
+
+# # Function to resolve SID to NT Account name
+# function Resolve-SID {
+#     param (
+#         [string]$Sid
+#     )
+    
+#     try {
+#         $sid = New-Object System.Security.Principal.SecurityIdentifier($Sid)
+#         $account = $sid.Translate([System.Security.Principal.NTAccount])
+#         return $account.Value
+#     }
+#     catch {
+#         return $null
+#     }
+# }
+
+# # Function to check if an account exists in the domain
+# function Test-AccountExists {
+#     param (
+#         [string]$AccountName
+#     )
+    
+#     try {
+#         $user = Get-ADUser -Filter {SamAccountName -eq $AccountName} -ErrorAction Stop
+#         return $true
+#     }
+#     catch {
+#         return $false
+#     }
+# }
+
+# # Function to check if a group exists in the domain
+# function Test-GroupExists {
+#     param (
+#         [string]$GroupName
+#     )
+    
+#     try {
+#         $group = Get-ADGroup -Filter {SamAccountName -eq $GroupName} -ErrorAction Stop
+#         return $true
+#     }
+#     catch {
+#         return $false
+#     }
+# }
+
+# # Extract the unresolved SIDs from the security policy file
+# $exportPath = "$env:TEMP\secpol.inf"
+# $policyContent = Get-Content $exportPath
+# $sidPattern = 'S-1-\d{2,}'
+
+# $sidLines = $policyContent | Select-String -Pattern $sidPattern
+
+# # Process each SID line
+# $report = @()
+# $sidLines | ForEach-Object {
+#     $line = $_.Line
+#     if ($line -match $sidPattern) {
+#         $sid = $matches[0]
+#         $resolvedAccount = Resolve-SID $sid
+        
+#         if ($resolvedAccount) {
+#             $isUser = Test-AccountExists -AccountName $resolvedAccount
+#             $isGroup = Test-GroupExists -GroupName $resolvedAccount
+            
+#             if (-not ($isUser -or $isGroup)) {
+#                 $report += [PSCustomObject]@{
+#                     Line = $line
+#                     UnresolvedSID = $sid
+#                     ResolvedAccount = $resolvedAccount
+#                     Status = "Invalid"
+#                 }
+#             }
+#         }
+#         else {
+#             $report += [PSCustomObject]@{
+#                 Line = $line
+#                 UnresolvedSID = $sid
+#                 ResolvedAccount = $null
+#                 Status = "Cannot Resolve"
+#             }
+#         }
+#     }
+# }
+
+# # Output the results
+# $report | Format-Table -AutoSize
+# $report | Export-Csv -Path "$env:TEMP\UnresolvedSIDs_Report.csv" -NoTypeInformation
+
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000210, WN10-00-000220, WN10-00-000230"
+# "Bluetooth must be turned off"
+$bluetoothStatus = Get-NetAdapter Where-Object { $_.Name -like "*Bluetooth*" } | Out-String
+if ($bluetoothStatus -ne $null -and $bluetoothStatus.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000210, WN10-00-000220, WN10-00-000230" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000005"
+# "account lockout duration must be configured to 15 minutes or greater"
+$lockoutDuractionCheck = $policyContent | Select-String "LockoutDuration" | Out-String
+if ($lockoutDuractionCheck.Contains('900') -eq $false) { Write-Output "WN10-AC-000005"; Write-Output $lockoutDuractionCheck }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000010"
+# "The number of allowed bad logon attempts must be configured to 3 or less."
+$lockoutBadCountCheck = $policyContent | Select-String "LockoutBadCount" | Out-String
+if ($lockoutBadCountCheck.Contains('3') -eq $false) { Write-Output "WN10-AC-000010"; Write-Output $lockoutBadCountCheck }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000015"
+# "The period of time before the bad logon counter is reset must be configured to 15 minutes."
+$lockoutCounterReset = $policyContent | Select-String "ResetLockoutCount" | Out-String
+if ($lockoutCounterReset.Contains('900') -eq $false) { Write-Output "WN10-AC-000015"; Write-Output $lockoutCounterReset }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000020"
+# "The password history must be configured to 24 passwords remembered."
+$passwordHistorySize = $policyContent | Select-String "PasswordHistorySize" | Out-String
+if ($passwordHistorySize.Contains('24') -eq $false) { Write-Output "WN10-AC-000020"; Write-Output $passwordHistorySize }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000025"
+# "The maximum password age must be configured to 60 days or less."
+$maxPasswordAge = $policyContent | Select-String "MaximumPasswordAge" | Out-String
+if ($maxPasswordAge.Contains('60') -eq $false) { Write-Output "WN10-AC-000025"; Write-Output $maxPasswordAge }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000030"
+# "The minimum password age must be configured to at least 1 day."
+$minPasswordAge = $policyContent | Select-String "MinimumPasswordAge" | Out-String
+if ($minPasswordAge.Contains('1') -eq $false) { Write-Output "WN10-AC-000030"; Write-Output $minPasswordAge }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000035"
+# "Passwords must, at a minimum, be 14 characters."
+$minPasswordLength = $policyContent | Select-String "MinimumPasswordLength" | Out-String
+if ($minPasswordLength.Contains('14') -eq $false) { Write-Output "WN10-AC-000035"; Write-Output $minPasswordLength }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000040"
+# "The built-in Microsoft password complexity filter must be enabled."
+$passwordComplexityFilter = $policyContent | Select-String "PasswordComplexity" | Out-String
+if ($passwordComplexityFilter.Contains('1') -eq $false) { Write-Output "WN10-AC-000040"; Write-Output $passwordComplexityFilter }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AC-000045"
+# "Reversible password encryption must be disabled."
+$reversiblePasswordEncryption = $policyContent | Select-String "ClearTextPassword" | Out-String
+if ($reversiblePasswordEncryption.Contains('0') -eq $false) { Write-Output "WN10-AC-000045"; Write-Output $reversiblePasswordEncryption }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000030"
+# "Audit policy using subcategories must be enabled."
+# "Subsequent audit policy checks are dependent on this policy being enabled."
+$subcategoryAuditing = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
+if ($subcategoryAuditing.scenoapplylegacyauditpolicy -ne 1) { Write-Output "WN10-SO-000030" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000005, WN10-AU-000010"
+# "The system must be configured to audit Account Logon - Credential Validation successes and failures."
+$auditPolicyAll = AuditPol /get /category:*
+$credentialValidationCheck = $auditPolicyAll | Select-String "Credential Validation" | Out-String
+if ($credentialValidationCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000005, WN10-AU-000010" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000030"
+# "The system must be configured to audit Account Management - Security Group Management successes."
+$securityGroupManagementCheck = $auditPolicyAll | Select-String "Security Group Management" | Out-String
+if ($securityGroupManagementCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000030" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000035, WN10-AU-000040"
+# "The system must be configured to audit Account Management - User Account Management successes and failures."
+$userAccountManagementCheck = $auditPolicyAll | Select-String "User Account Management" | Out-String
+if ($userAccountManagementCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000035, WN10-AU-000040" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
