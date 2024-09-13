@@ -513,3 +513,215 @@ if ($specialLogonCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-0
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-AU-000081, WN10-AU-000082"
+# "Windows 10 must be configured to audit Object Access - File Share successes and failures."
+$fileShareCheck = $auditPolicyAll | Select-String "File Share" | Out-String
+if ($fileShareCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000081, WN10-AU-000082" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000083, WN10-AU-000084"
+# "Windows 10 must be configured to audit Object Access - Other Object Access Events successes and failures."
+$otherObjectAccessCheck = $auditPolicyAll | Select-String "Other Object Access Events" | Out-String
+if ($otherObjectAccessCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000083, WN10-AU-000084" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000085, WN10-AU-000090"
+# "The system must be configured to audit Object Access - Removable Storage successes and failures."
+$removableStorageCheck = $auditPolicyAll | Select-String "Removable Storage" | Out-String
+if ($removableStorageCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000085, WN10-AU-000090" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000100"
+# "The system must be configured to audit Policy Change - Audit Policy Change successes."
+$auditPolicyChangeCheck = $auditPolicyAll | Select-String "Audit Policy Change" | Out-String
+if ($auditPolicyChangeCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000100" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000105"
+# "The system must be configured to audit Policy Change - Authentication Policy Change successes."
+$authenticationPolicyChangeCheck = $auditPolicyAll | Select-String "Authentication Policy Change" | Out-String
+if ($authenticationPolicyChangeCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000105" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000107"
+# "The system must be configured to audit Policy Change - Authorization Policy Change successes."
+$authorizationPolicyChangeCheck = $auditPolicyAll | Select-String "Authorization Policy Change" | Out-String
+if ($authorizationPolicyChangeCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000107" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000110, WN10-AU-000115"
+# "The system must be configured to audit Privilege Use - Sensitive Privilege Use successes and failures."
+$sensitivePrivilegeUseCheck = $auditPolicyAll | Select-String "Sensitive Privilege Use" | Out-String
+if ($sensitivePrivilegeUseCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000110, WN10-AU-000115" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000120"
+# "The system must be configured to audit System - IPSec Driver failures."
+$ipsecDriverCheck = $auditPolicyAll | Select-String "IPSec Driver" | Out-String
+if ($ipsecDriverCheck.Contains('Failure') -eq $false) { Write-Output "WN10-AU-000120" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000130, WN10-AU-000135"
+# "The system must be configured to audit System - Other System Events successes and failures."
+$otherSystemEventsCheck = $auditPolicyAll | Select-String "Other System Events" | Out-String
+if ($otherSystemEventsCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000130, WN10-AU-000135" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000140"
+# "The system must be configured to audit System - Security State Change successes."
+$securityStateChangeCheck = $auditPolicyAll | Select-String "Security State Change" | Out-String
+if ($securityStateChangeCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000140" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000150"
+# "The system must be configured to audit System - Security System Extension successes."
+$securitySystemExtensionCheck = $auditPolicyAll | Select-String "Security System Extension" | Out-String
+if ($securitySystemExtensionCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000150" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000155, WN10-AU-000160"
+# "The system must be configured to audit System - System Integrity successes and failures."
+$systemIntegrityCheck = $auditPolicyAll | Select-String "System Integrity" | Out-String
+if ($systemIntegrityCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000155, WN10-AU-000160" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000500"
+# "The Application event log size must be configured to 32768 KB or greater."
+$eventLogSize = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application\
+if ($eventLogSize.MaxSize -lt 32768) { Write-Output "WN10-AU-000500" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000505"
+# "The Security event log size must be configured to 1024000 KB or greater."
+$securityEventLogSize = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security\
+if ($securityEventLogSize.MaxSize -lt 1024000) { Write-Output "WN10-AU-000505" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000510"
+# "The System event log size must be configured to 32768 KB or greater."
+$systemEventLogSize = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System\
+if ($systemEventLogSize.MaxSize -lt 32768) { Write-Output "WN10-AU-000510" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000515"
+# "Windows 10 permissions for the Application event log must prevent access by non-privileged accounts."
+$applicationEventLogACL = (Get-Acl C:\Windows\System32\winevt\Logs\Application.evtx).Access
+
+$requiredPermissions = @(
+    @{Identity = "NT SERVICE\EventLog"; Rights = "FullControl"},
+    @{Identity = "NT AUTHORITY\SYSTEM"; Rights = "FullControl"},
+    @{Identity = "BUILTIN\Administrators"; Rights = "FullControl"}
+)
+
+$missingPermissions = $requiredPermissions | Where-Object {
+    $permission = $_
+    -not ($applicationEventLogACL | Where-Object {
+        $_.IdentityReference -eq $permission.Identity -and
+        $_.FileSystemRights -eq $permission.Rights
+    })
+}
+
+if ($missingPermissions) {
+    Write-Output "WN10-AU-000515"
+}
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000520"
+# "Windows 10 permissions for the Security event log must prevent access by non-privileged accounts."
+$securityEventLogACL = (Get-Acl C:\Windows\System32\winevt\Logs\Security.evtx).Access
+
+$requiredPermissions = @(
+    @{Identity = "NT SERVICE\EventLog"; Rights = "FullControl"},
+    @{Identity = "NT AUTHORITY\SYSTEM"; Rights = "FullControl"},
+    @{Identity = "BUILTIN\Administrators"; Rights = "FullControl"}
+)
+
+$missingPermissions = $requiredPermissions | Where-Object {
+    $permission = $_
+    -not ($securityEventLogACL | Where-Object {
+        $_.IdentityReference -eq $permission.Identity -and
+        $_.FileSystemRights -eq $permission.Rights
+    })
+}
+
+if ($missingPermissions) {
+    Write-Output "WN10-AU-000520"
+}
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000525"
+# "Windows 10 permissions for the System event log must prevent access by non-privileged accounts."
+$systemEventLogACL = (Get-Acl C:\Windows\System32\winevt\Logs\System.evtx).Access
+
+$requiredPermissions = @(
+    @{Identity = "NT SERVICE\EventLog"; Rights = "FullControl"},
+    @{Identity = "NT AUTHORITY\SYSTEM"; Rights = "FullControl"},
+    @{Identity = "BUILTIN\Administrators"; Rights = "FullControl"}
+)
+
+$missingPermissions = $requiredPermissions | Where-Object {
+    $permission = $_
+    -not ($systemEventLogACL | Where-Object {
+        $_.IdentityReference -eq $permission.Identity -and
+        $_.FileSystemRights -eq $permission.Rights
+    })
+}
+
+if ($missingPermissions) {
+    Write-Output "WN10-AU-000525"
+}
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000555"
+# "Windows 10 must be configured to audit Other Policy Change Events Failures."
+$otherPolicyChangeEventsCheck = $auditPolicyAll | Select-String "Other Policy Change Events" | Out-String
+if ($otherPolicyChangeEventsCheck.Contains('Failure') -eq $false) { Write-Output "WN10-AU-000555" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000560, WN10-AU-000565"
+# "Windows 10 must be configured to audit other Logon/Logoff Events Successes and Failures."
+$otherLogonLogoffEventsCheck = $auditPolicyAll | Select-String "Other Logon/Logoff Events" | Out-String
+if ($otherLogonLogoffEventsCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000560, WN10-AU-000565" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000570"
+# "Windows 10 must be configured to audit Detailed File Share Failures."
+$detailedFileShareCheck = $auditPolicyAll | Select-String "Detailed File Share" | Out-String
+if ($detailedFileShareCheck.Contains('Failure') -eq $false) { Write-Output "WN10-AU-000570" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000575, WN10-AU-000580"
+# "Windows 10 must be configured to audit MPSSVC Rule-Level Policy Change Successes."
+$mpssvcRuleLevelPolicyChangeCheck = $auditPolicyAll | Select-String "MPSSVC Rule-Level Policy Change" | Out-String
+if ($mpssvcRuleLevelPolicyChangeCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000575, WN10-AU-000580" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000005"
+# "Camera access from the lock screen must be disabled."
+$cameraAccessFromLockScreen = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization\
+if ($cameraAccessFromLockScreen.NoLockScreenCamera -ne 1) { Write-Output "WN10-CC-000005" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
