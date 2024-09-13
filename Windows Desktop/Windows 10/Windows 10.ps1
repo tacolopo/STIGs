@@ -464,3 +464,52 @@ if ($userAccountManagementCheck.Contains('Success and Failure') -eq $false) { Wr
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-AU-000045"
+# "The system must be configured to audit Detailed Tracking - PNP Activity successes."
+$pnpActivityCheck = $auditPolicyAll | Select-String "Plug and Play Events" | Out-String
+if ($credentialValidationCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000045" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000050"
+# "The system must be configured to audit Detailed Tracking - Process Creation successes."
+$procCreationCheck = $auditPolicyAll | Select-String "Process Creation" | Out-String
+if ($procCreationCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000050" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000054"
+# "The system must be configured to audit Logon/Logoff - Account Lockout failures."
+$accountLockoutCheck = $auditPolicyAll | Select-String "Account Lockout" | Out-String
+if ($accountLockoutCheck.Contains('Failure') -eq $false) { Write-Output "WN10-AU-000054" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000060"
+# "The system must be configured to audit Logon/Logoff - Group Membership successes."
+$groupMembershipCheck = $auditPolicyAll | Select-String "Group Membership" | Out-String
+if ($groupMembershipCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000060" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000065"
+# "The system must be configured to audit Logon/Logoff - Logoff successes."
+$logoffCheck = $auditPolicyAll | Select-String "Logoff" | Out-String
+if ($logoffCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000065" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-AU-000070, WN10-AU-000075"
+# "The system must be configured to audit Logon/Logoff - Logon successes and failures."
+$logonCheck = $auditPolicyAll | Select-String "Logon" | Out-String
+if ($logonCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000070, WN10-AU-000075" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-AU-000080"
+"The system must be configured to audit Logon/Logoff - Special Logon successes."
+$specialLogonCheck = $auditPolicyAll | Select-String "Special Logon" | Out-String
+if ($specialLogonCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000080" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
