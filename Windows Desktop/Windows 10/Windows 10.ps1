@@ -725,3 +725,36 @@ if ($cameraAccessFromLockScreen.NoLockScreenCamera -ne 1) { Write-Output "WN10-C
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-CC-000007"
+# "Windows 10 must cover or disable the built-in or attached camera when not in use."
+$cameraDisableCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam
+if ($cameraDisableCheck.Value -ne 'Deny') { Write-Output "WN10-CC-000007" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000010"
+# "The display of slide shows on the lock screen must be disabled."
+if ($cameraAccessFromLockScreen.NoLockScreenSlideshow -ne 1) { Write-Output "WN10-CC-000010" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000020"
+# "IPv6 source routing must be configured to highest protection."
+$ip6ParametersCheck = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters\
+if ($ip6ParametersCheck.DisableIPSourceRouting -ne 2) { Write-Output "WN10-CC-000020" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000025"
+# "The system must be configured to prevent IP source routing."
+$ipParametersCheck = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\
+if ($ipParametersCheck.DisableIPSourceRouting -ne 2) { Write-Output "WN10-CC-000025" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000030"
+# "The system must be configured to prevent ICMP redirects from overriding OSPF generated routes."
+if ($ipParametersCheck.EnableICMPRedirect -ne 0) { Write-Output "WN10-CC-000030" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
