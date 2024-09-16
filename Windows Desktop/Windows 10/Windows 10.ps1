@@ -758,7 +758,67 @@ if ($ipParametersCheck.EnableICMPRedirect -ne 0) { Write-Output "WN10-CC-000030"
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-#SYNC WITH OTHER INSTANCE
+# "WN10-CC-000035"
+# "The system must be configured to ignore NetBIOS name release requests except from WINS servers."
+$netBTParameters = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameters\
+if ($netBTParameters.NoNameReleaseOnDemand -ne 1) { Write-Output "WN10-CC-000035" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000037"
+# "Local administrator accounts must have their privileged token filtered to prevent elevated privileges from being used over the network on domain systems."
+$currentVersionPoliciesSystem = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\
+if ($currentVersionPoliciesSystem.LocalAccountTokenFilterPolicy -ne 0) { Write-Output "WN10-CC-000037" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000038"
+# "WDigest Authentication must be disabled."
+$wDigestInfo = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\Wdigest\
+if ($wDigestInfo.UseLogonCredential -ne 0) { Write-Output "WN10-CC-000038" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "Deviation"
+# "WN10-CC-000039"
+# "Run as different user must be removed from context menus."
+# $runAsUser = Get-ItemProperty -Path HKLM:\SOFTWARE\Classes\batfile\shell\runasuser\
+# if ($runAsUser.SuppressionPolicy -ne 4096) { Write-Output "WN10-CC-000039" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000040"
+# "Insecure logons to an SMB server must be disabled."
+$lanmanWorkstationInfo = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation\
+if ($lanmanWorkstationInfo.AllowInsecureGuestAuth -ne 0) { Write-Output "WN10-CC-000040" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000044"
+# "Internet connection sharing must be disabled."
+$networkConnectionsInfo = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network` Connections\
+if ($networkConnectionsInfo.NC_ShowSharedAccessUI -ne 0) { Write-Output "WN10-CC-000044" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000052"
+# "Windows 10 must be configured to prioritize ECC Curves with longer key lengths first."
+$eccCurvesInfo = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002\
+$eccCurvesValue = $eccCurvesInfo.EccCurves
+if ($eccCurvesValue.Contains('NistP384') -eq $false -or $eccCurvesValue.Contains('NistP256') -eq $false) { Write-Output "WN10-CC-000052" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000055"
+# "Simultaneous connections to the internet or a Windows domain must be limited."
+$simultaneousConnectionsCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy\
+if ($simultaneousConnectionsCheck.fMinimizeConnections -ne 3) { Write-Output "WN10-CC-000055" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000060"
+# "Connections to non-domain networks when connected to a domain authenticated network must be blocked."
+if ($simultaneousConnectionsCheck.fBlockNonDomain -ne 1) { Write-Output "WN10-CC-000060" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
