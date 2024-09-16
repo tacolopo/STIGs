@@ -758,3 +758,44 @@ if ($ipParametersCheck.EnableICMPRedirect -ne 0) { Write-Output "WN10-CC-000030"
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+#SYNC WITH OTHER INSTANCE
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000065"
+# "Wi-Fi Sense must be disabled. This is NA as of v1803 of Windows 10"
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000066"
+# "Command line data must be included in process creation events."
+$commandLineDataCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit\
+if ($commandLineDataCheck.ProcessCreationIncludeCmdLine_Enabled -ne 1) { Write-Output "WN10-CC-000066" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000068"
+# "Windows 10 must be configured to enable Remote host allows delegation of non-exportable credentials."
+$remoteHostDelegationCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CredentialsDelegation\
+if ($remoteHostDelegationCheck.AllowProtectedCreds -ne 1) { Write-Output "WN10-CC-000068" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000070"
+# "Virtualization Based Security must be enabled on Windows 10 with the platform security level configured to Secure Boot or Secure Boot with DMA Protection."
+$vbsDetailsCheck = Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard
+$vbsRequiredSecurityProperties = $vbsDetailsCheck.RequiredSecurityProperties | Out-String
+if ($vbsRequiredSecurityProperties.Contains('2') -eq $false) { Write-Output "WN10-CC-000070" }
+if ($vbsDetailsCheck.VirtualizationBasedSecurityStatus -ne 2) { Write-Output "WN10-CC-000070" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000075"
+# "Credential Guard must be running on Windows 10 domain-joined systems."
+$vbsSecurityServicesRunning = $vbsDetailsCheck.SecurityServicesRunning | Out-String
+if ($vbsSecurityServicesRunning.Contains('1') -eq $false) { Write-Output "WN10-CC-000075" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
+
