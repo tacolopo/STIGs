@@ -846,8 +846,8 @@ $windowsSystemChecks = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-CC-000130"
-"Local users on domain-joined computers must not be enumerated."
+# "WN10-CC-000130"
+# "Local users on domain-joined computers must not be enumerated."
 if ($windowsSystemChecks.EnumerateLocalUsers -ne 0) { Write-Output "WN10-CC-000130" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -900,5 +900,36 @@ if ($windowsExplorerSettingsCheck.NoAutoplayfornonVolume -ne 1) { Write-Output "
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-CC-000185"
+# "The default autorun behavior must be configured to prevent autorun commands."
+if ($webPubWizards.NoAutorun -ne 1) { Write-Output "WN10-CC-000185" }
 
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000190"
+# "Autoplay must be disabled for all drives."
+if ($webPubWizards.NoDriveTypeAutoRun -ne 255) { Write-Output "WN10-CC-000190" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000195"
+# "Enhanced anti-spoofing for facial recognition must be enabled on Window 10."
+$biometricsFacialFeatures = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Biometrics\FacialFeatures\
+if ($biometricsFacialFeatures.EnhancedAntiSpoofing -ne 1) { Write-Output "WN10-CC-000195" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000197"
+# "Microsoft consumer experiences must be turned off."
+$cloudContentSettingsCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent\
+if ($cloudContentSettingsCheck.DisableWindowsConsumerFeatures -ne 1) { Write-Output "WN10-CC-000197" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-CC-000200"
+"Administrator accounts must not be enumerated during elevation."
+$credUIPoliciesCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI\
+if ($credUIPoliciesCheck.EnumerateAdministrators -ne 0) { Write-Output "WN10-CC-000200" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
