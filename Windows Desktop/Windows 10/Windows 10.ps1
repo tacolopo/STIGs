@@ -1031,4 +1031,138 @@ if ($windowsExplorerSettingsCheck.NoHeapTerminationOnCorruption -ne $null -and $
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-CC-000225"
+# "File Explorer shell protocol must run in protected mode."
+if ($webPubWizards.PreXPSP2ShellProtocolBehavior -ne $null -and $webPubWizards.PreXPSP2ShellProtocolBehavior -ne 0) { Write-Output "WN10-CC-000225" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000230"
+# "Users must not be allowed to ignore Windows Defender SmartScreen filter warnings for malicious websites in Microsoft Edge."
+$phishingFilterCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter\
+if ($phishingFilterCheck.PreventOverride -ne 1) { Write-Output "WN10-CC-000230" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000235"
+# "Users must not be allowed to ignore Windows Defender SmartScreen filter warnings for unverified files in Microsoft Edge."
+if ($phishingFilterCheck.PreventOverrideAppRepUnknown -ne 1) { Write-Output "WN10-CC-000235" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000238"
+# "Windows 10 must be configured to prevent certificate error overrides in Microsoft Edge."
+$edgeInternetSettingsCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Internet` Settings\
+if ($edgeInternetSettingsCheck.PreventCertErrorOverrides -ne 1) { Write-Output "WN10-CC-000238" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000245"
+# "The password manager function in the Edge browser must be disabled."
+$mainEdgeSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main\
+if ($mainEdgeSettings.'FormSuggest Passwords' -ne 'no') { Write-Output "WN10-CC-000245" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000250"
+# "The Windows Defender SmartScreen filter for Microsoft Edge must be enabled."
+if ($phishingFilterCheck.EnabledV9 -ne 1) { Write-Output "WN10-CC-000250" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000252"
+# "Windows 10 must be configured to disable Windows Game Recording and Broadcasting."
+$gameDVRChecks = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR\
+if ($gameDVRChecks.AllowGameDVR -ne 0) { Write-Output "WN10-CC-000252" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000255"
+# "The use of a hardware security device with Windows Hello for Business must be enabled."
+$passportForWorkChecks = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\PassportForWork\
+if ($passportForWorkChecks.RequireSecurityDevice -ne 1) { Write-Output "WN10-CC-000255" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000260"
+# "Windows 10 must be configured to require a minimum pin length of six characters or greater."
+$passportPinLength = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\PassportForWork\PINComplexity\
+if ($passportPinLength.MinLength -lt 6) { Write-Output "WN10-CC-000260" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000270"
+# "Passwords must not be saved in the Remote Desktop Client."
+if ($terminalServicesCheck.DisablePasswordSaving -ne 1) { Write-Output "WN10-CC-000270" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000275"
+# "Local drives must be prevented from sharing with Remote Desktop Session Hosts."
+if ($terminalServicesCheck.fDisableCdm -ne 1) { Write-Output "WN10-CC-000275" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000280"
+# "Remote Desktop Services must always prompt a client for passwords upon connection."
+if ($terminalServicesCheck.fPromptForPassword -ne 1) { Write-Output "WN10-CC-000280" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000285"
+# "The Remote Desktop Session Host must require secure RPC communications."
+if ($terminalServicesCheck.fEncryptRPCTraffic -ne 1) { Write-Output "WN10-CC-000285" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000290"
+# "Remote Desktop Services must be configured with the client connection encryption set to the required level."
+if ($terminalServicesCheck.MinEncryptionLevel -ne 3) { Write-Output "WN10-CC-000290" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000295"
+# "Attachments must be prevented from being downloaded from RSS feeds."
+$internetExplorerFeeds = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds\
+if ($internetExplorerFeeds.DisableEnclosureDownload -ne 1) { Write-Output "WN10-CC-000295" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000300"
+# "Basic authentication for RSS feeds over HTTP must not be used."
+if ($internetExplorerFeeds.AllowBasicAuthInClear -ne 0 -and $internetExplorerFeeds.AllowBasicAuthInClear -ne $null) { Write-Output "WN10-CC-000300" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000305"
+# "Indexing of encrypted files must be turned off."
+$windowsSearchCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows` Search\
+if ($windowsSearchCheck.AllowIndexingEncryptedStoresOrItems -ne 0) { Write-Output "WN10-CC-000305" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000310"
+# "Users must be prevented from changing installation options."
+$installerSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer\
+if ($installerSettings.EnableUserControl -ne 0) { Write-Output "WN10-CC-000310" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000315"
+# "The Windows Installer Always install with elevated privileges must be disabled."
+if ($installerSettings.AlwaysInstallElevated -ne 0) { Write-Output "WN10-CC-000315" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000320"
+# "Users must be notified if a web-based program attempts to install software."
+if ($installerSettings.SafeForScripting -ne 0 -and $installerSettings.SafeForScripting -ne $null) { Write-Output "WN10-CC-000320" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000325"
+# "Automatically signing in the last interactive user after a system-initiated restart must be disabled."
+if ($currentVersionPoliciesSystem.DisableAutomaticRestartSignIn -ne 1) { Write-Output "WN10-CC-000325" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
