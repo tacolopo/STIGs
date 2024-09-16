@@ -797,5 +797,37 @@ if ($vbsSecurityServicesRunning.Contains('1') -eq $false) { Write-Output "WN10-C
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-CC-000085"
+# "Early Launch Antimalware, Boot-Start Driver Initialization Policy must prevent boot drivers."
+$elamCheck = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch\
+if ($elamCheck.DriverLoadPolicy -notin @(1, 3, 8)) { Write-Output "WN10-CC-000085" }
 
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000090"
+# "Group Policy objects must be reprocessed even if they have not changed."
+$gpoReprocessCheck = Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}"
+if ($gpoReprocessCheck.NoGPOListChanges -ne 0) { Write-Output "WN10-CC-000090" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000100"
+# "Downloading print driver packages over HTTP must be prevented."
+$httpPrintDriverCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows` NT\Printers\
+if ($httpPrintDriverCheck.DisableWebPnPDownload -ne 1) { Write-Output "WN10-CC-000100" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000105"
+# "Web publishing and online ordering wizards must be prevented from downloading a list of providers."
+$webPubWizards = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\
+if ($webPubWizards.NoWebServices -ne 1) { Write-Output "WN10-CC-000105" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000110"
+# "Printing over HTTP must be prevented."
+if ($httpPrintDriverCheck.DisableHTTPPrinting -ne 1) { Write-Output "WN10-CC-000100" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
