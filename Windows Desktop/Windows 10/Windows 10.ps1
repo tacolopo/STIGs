@@ -926,10 +926,42 @@ if ($cloudContentSettingsCheck.DisableWindowsConsumerFeatures -ne 1) { Write-Out
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-CC-000200"
-"Administrator accounts must not be enumerated during elevation."
+# "WN10-CC-000200"
+# "Administrator accounts must not be enumerated during elevation."
 $credUIPoliciesCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI\
 if ($credUIPoliciesCheck.EnumerateAdministrators -ne 0) { Write-Output "WN10-CC-000200" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000204"
+# "If Enhanced diagnostic data is enabled it must be limited to the minimum required to support Windows Analytics."
+$dataCollectionSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection\
+if ($dataCollectionSettings.LimitEnhancedDiagnosticDataWindowsAnalytics -ne 1) { Write-Output "WN10-CC-000204" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000205"
+# "Windows Telemetry must not be configured to Full."
+if ($dataCollectionSettings.AllowTelemetry -notin @(0, 1)) { Write-Output "WN10-CC-000205" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000206"
+# "Windows Update must not obtain updates from other PCs on the internet."
+$deliveryOptimizationSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization\
+if ($deliveryOptimizationSettings.DODownloadMode -eq 3) { Write-Output "WN10-CC-000206" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000210"
+# "The Windows Defender SmartScreen for Explorer must be enabled."
+if ($windowsSystemChecks.EnableSmartScreen -ne 1) { Write-Output "WN10-CC-000210" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000215"
+# "Explorer Data Execution Prevention must be enabled."
+if ($windowsExplorerSettingsCheck.NoDataExecutionPrevention -ne $null -or $windowsExplorerSettingsCheck.NoDataExecutionPrevention -ne 0) { Write-Output "WN10-CC-000215" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
