@@ -831,3 +831,38 @@ if ($httpPrintDriverCheck.DisableHTTPPrinting -ne 1) { Write-Output "WN10-CC-000
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-CC-000115"
+# "Systems must at least attempt device authentication using certificates."
+$certificateDeviceAuthCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters\
+if ($certificateDeviceAuthCheck.DevicePKInitEnabled -eq 0) { Write-Output "WN10-CC-000115" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"Deviation"
+# "WN10-CC-000120"
+# "The network selection user interface (UI) must not be displayed on the logon screen."
+$windowsSystemChecks = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\System\
+# if ($windowsSystemChecks.DontDisplayNetworkSelectionUI -ne 1) { Write-Output "WN10-CC-000120" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-CC-000130"
+"Local users on domain-joined computers must not be enumerated."
+if ($windowsSystemChecks.EnumerateLocalUsers -ne 0) { Write-Output "WN10-CC-000130" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000145"
+# "Users must be prompted for a password on resume from sleep (on battery)."
+$dcSettingsCheck = Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51\"
+if ($dcSettingsCheck.DCSettingIndex -ne 1) { Write-Output "WN10-CC-000145" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000150"
+# "The user must be prompted for a password on resume from sleep (plugged in)."
+if ($dcSettingsCheck.ACSettingIndex -ne 1) { Write-Output "WN10-CC-000150" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
