@@ -961,7 +961,14 @@ if ($windowsSystemChecks.EnableSmartScreen -ne 1) { Write-Output "WN10-CC-000210
 
 # "WN10-CC-000215"
 # "Explorer Data Execution Prevention must be enabled."
-if ($windowsExplorerSettingsCheck.NoDataExecutionPrevention -ne $null -or $windowsExplorerSettingsCheck.NoDataExecutionPrevention -ne 0) { Write-Output "WN10-CC-000215" }
+if ($windowsExplorerSettingsCheck.NoDataExecutionPrevention -ne $null -and $windowsExplorerSettingsCheck.NoDataExecutionPrevention -ne 0) { Write-Output "WN10-CC-000215" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000220"
+# "Turning off File Explorer heap termination on corruption must be disabled."
+if ($windowsExplorerSettingsCheck.NoHeapTerminationOnCorruption -ne $null -and $windowsExplorerSettingsCheck.NoHeapTerminationOnCorruption -ne 0) { Write-Output "WN10-CC-000220" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 
