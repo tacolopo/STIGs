@@ -865,4 +865,40 @@ if ($dcSettingsCheck.ACSettingIndex -ne 1) { Write-Output "WN10-CC-000150" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-CC-000155"
+# "Solicited Remote Assistance must not be allowed."
+$terminalServicesCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows` NT\Terminal` Services\
+if ($terminalServicesCheck.fAllowToGetHelp -ne 0) { Write-Output "WN10-CC-000155" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000165"
+# "Unauthenticated RPC clients must be restricted from connecting to the RPC server."
+$rpcSettingsCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows` NT\Rpc\
+if ($rpcSettingsCheck.RestrictRemoteClients -ne 1) { Write-Output "WN10-CC-000165" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000170"
+# "The setting to allow Microsoft accounts to be optional for modern style apps must be enabled."
+$currentversionPoliciesSystem = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\
+if ($currentversionPoliciesSystem.MSAOptional -ne 1) { Write-Output "WN10-CC-000170" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000175"
+# "The Application Compatibility Program Inventory must be prevented from collecting data and sending the information to Microsoft."
+$appCompatSettingsCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppCompat\
+if ($appCompatSettingsCheck.DisableInventory -ne 1) { Write-Output "WN10-CC-000175" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000180"
+# "Autoplay must be turned off for non-volume devices."
+$windowsExplorerSettingsCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer\
+if ($windowsExplorerSettingsCheck.NoAutoplayfornonVolume -ne 1) { Write-Output "WN10-CC-000180" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
 
