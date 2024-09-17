@@ -230,14 +230,14 @@ if ($v2ps.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000155" }
 
 # "WN10-00-000160"
 # "The Server Message Block (SMB) v1 protocol must be disabled on the system."
-$smbv1Check =Get-WindowsOptionalFeature -Online | Where FeatureName -eq SMB1Protocol | Out-String
+$smbv1Check = Get-WindowsOptionalFeature -Online | Where FeatureName -eq SMB1Protocol | Out-String
 if ($smbv1Check.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000160" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-00-000165"
 # "The SMBv1 protocol must be disabled on the SMB server. If WN16-00-000160 passes, this is N/A."
-$smbv1ServerCheck = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\
-if ($smbv1ServerCheck.SMB1 -ne 0 -and $smbv1Check.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000165" }
+$lanmanServerParameters = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\
+if ($lanmanServerParameters.SMB1 -ne 0 -and $smbv1Check.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000165" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-00-000170"
@@ -940,8 +940,7 @@ if ($rpcSettingsCheck.RestrictRemoteClients -ne 1) { Write-Output "WN10-CC-00016
 
 # "WN10-CC-000170"
 # "The setting to allow Microsoft accounts to be optional for modern style apps must be enabled."
-$currentversionPoliciesSystem = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\
-if ($currentversionPoliciesSystem.MSAOptional -ne 1) { Write-Output "WN10-CC-000170" }
+if ($currentVersionPoliciesSystem.MSAOptional -ne 1) { Write-Output "WN10-CC-000170" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1335,4 +1334,77 @@ if ($netLogonParameters.RequireStrongKey -ne 1) { Write-Output "WN10-SO-000060" 
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-SO-000065"
+# "WN10-SO-000070"
+# "The machine inactivity limit must be set to 15 minutes, locking the system with the screensaver."
+if ($currentVersionPoliciesSystem.InactivityTimeoutSecs -notin 1..900) { Write-Output "WN10-SO-000070" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000075"
+# "The required legal notice must be configured to display before console logon."
+if ($currentVersionPoliciesSystem.LegalNoticeText -eq $null) { Write-Output "WN10-SO-000075" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000080"
+# "The Windows dialog box title for the legal banner must be configured."
+if ($currentVersionPoliciesSystem.LegalNoticeCaption -eq $null) { Write-Output "WN10-SO-000080" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000085"
+# "Caching of logon credentials must be limited."
+$cachedLogonsCount = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon").CachedLogonsCount -as [int]
+if ($cachedLogonsCount -gt 10) { Write-Output "WN10-SO-000085" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "Deviation"
+# "WN10-SO-000095"
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000100"
+# "The Windows SMB client must be configured to always perform SMB packet signing."
+$lanmanWorkstationParameters = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters\
+if ($lanmanWorkstationParameters.RequireSecuritySignature -ne 1) { Write-Output "WN10-SO-000100" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000110"
+# "Unencrypted passwords must not be sent to third-party SMB Servers."
+if ($lanmanWorkstationParameters.EnablePlainTextPassword -ne 0) { Write-Output "WN10-SO-000110" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000120"
+# "The Windows SMB server must be configured to always perform SMB packet signing."
+if ($lanmanServerParameters.RequireSecuritySignature -ne 1) { Write-Output "WN10-SO-000120" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-SO-000140"
+# "Anonymous SID/Name translation must not be allowed."
+$lsaAnonymousName = $policyContent | Select-String "LSAAnonymousNameLookup" | Out-String
+if ($lsaAnonymousName.Contains("1") -eq $true) { Write-Output "WN10-SO-000140" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-SO-000145"
+# "Anonymous enumeration of SAM accounts must not be allowed."
+if ($subcategoryAuditing.RestrictAnonymousSAM -ne 1) { Write-Output "WN10-SO-000145" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-SO-000150"
+# "Anonymous enumeration of shares must be restricted."
+if ($subcategoryAuditing.RestrictAnonymous -ne 1) { Write-Output "WN10-SO-000150" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000165"
+# "Anonymous access to Named Pipes and Shares must be restricted."
+if ($lanmanServerParameters.RestrictNullSessAccess -ne 1) { Write-Output "WN10-SO-000165" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
