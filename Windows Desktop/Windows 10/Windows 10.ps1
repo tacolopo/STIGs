@@ -13,6 +13,7 @@ $os.CsDNSHostName
 $os.CsDomainRole #MemberWorkstation
 $os.OsName #Windows 10 Enterprise
 $os.OsArchitecture #64-bit
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000010"
@@ -20,28 +21,33 @@ $os.OsArchitecture #64-bit
 $tpm = Get-Tpm
 $tpm.TpmPresent #True
 $tpm.TpmEnabled #True
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000015"
 "System must be configured to run in UEFI mode."
 $os.BiosFirmwareType #Uefi
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000020"
 "Secure Boot must be enabled."
 $bootState = Confirm-SecureBootUEFI
 $bootState #True
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000025"
 "An approved tool for continuous network scanning must be installed and configured to run."
 "True"
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000030"
 "Systems must use BitLocker to encrypt all disks"
 $bitLocker = Get-BitLockerVolume
 $bitLocker.ProtectionStatus #On
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000031"
@@ -49,22 +55,26 @@ $bitLocker.ProtectionStatus #On
 $bitLockerPin = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\FVE\
 $bitLockerPin.UseAdvancedStartup #1
 $bitLockerPin.UseTPMPIN #1 or 2
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000032"
 "BitLocker PIN must have a minimum length of six digits for pre-boot authentication."
 $bitLockerPin.MinimumPin #6 or greater
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000035"
 "Verify AppLocker is enabled"
 $appLocker = Get-AppLockerPolicy -Effective -Xml
 $appLocker.Contains('Type="Appx" EnforcementMode="Enabled"') #True
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000040"
 "Get Build Number"
 $os.OsBuildNumber #19045
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-00-000045"
@@ -72,6 +82,7 @@ $os.OsBuildNumber #19045
 $allWindowsServices = Get-Service
 $defender = $allWindowsServices | where {$_.DisplayName -Like "*Defender*"} | Select Status,DisplayName | Out-String
 if ($defender.Contains('Running Microsoft Defender Antivirus') -eq $false) { Write-Output "WN10-00-000045" }
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-00-000050"
@@ -79,12 +90,14 @@ if ($defender.Contains('Running Microsoft Defender Antivirus') -eq $false) { Wri
 $ntfs = Get-Volume
 $ntfsCheck = foreach ($volume in $ntfs) { if ($volume.FileSystemType -ne 'NTFS') { Write-Output "Fail" } }
 if ($ntfsCheck -eq $null ) { SilentlyContinue } else { Write-Output "WN10-00-000050" }
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-00-000055"
 # "Alternate operating systems must not be permitted on the same system."
 $alternateOS = bcdedit /enum all | Out-String
 if ($alternateOS.Contains("Windows 11") -or $alternateOS.Contains("Linux")) { Write-Output "WN10-00-000055" }
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "Confirm whether print is allowed"
@@ -94,6 +107,7 @@ $shares = Get-WmiObject -Class Win32_Share
 $allowedShares = @("ADMIN$", "C$", "IPC$", "print$")
 $shareNames = $shares.Name
 if ($shareNames | Where-Object { $_ -notin $allowedShares }) { Write-Output "WN10-00-000060" }
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "Confirm whether noaccess account is allowed"
@@ -114,6 +128,7 @@ if ($shareNames | Where-Object { $_ -notin $allowedShares }) { Write-Output "WN1
 "WN10-00-000070"
 "Administrators group must only contain approved accounts"
 Get-LocalGroupMember Administrators
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "Confirm no backup operators account in BARA"
@@ -246,10 +261,12 @@ $smbv1ClientCheck = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Servic
 if ($smbv1ClientCheck.Start -ne 4 -and $smbv1Check.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000170" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000175" (Dev.)
-"The Secondary Logon service must be disabled on Windows 10."
-$secondaryLogonCheck = $allWindowsServices | where {$_.DisplayName -Like "*Secondary*"} | Select Status,DisplayName | Out-String
-if ($secondaryLogonCheck.Contains('Running') -eq $true) { Write-Output "WN10-00-000175" }
+# "Deviation"
+# "WN10-00-000175"
+# "The Secondary Logon service must be disabled on Windows 10."
+# $secondaryLogonCheck = $allWindowsServices | where {$_.DisplayName -Like "*Secondary*"} | Select Status,DisplayName | Out-String
+# if ($secondaryLogonCheck.Contains('Running') -eq $true) { Write-Output "WN10-00-000175" }
+
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "Go back to add in valid group and user SIDs to compare to"
@@ -1383,20 +1400,20 @@ if ($lanmanServerParameters.RequireSecuritySignature -ne 1) { Write-Output "WN10
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-SO-000140"
+# "WN10-SO-000140"
 # "Anonymous SID/Name translation must not be allowed."
 $lsaAnonymousName = $policyContent | Select-String "LSAAnonymousNameLookup" | Out-String
 if ($lsaAnonymousName.Contains("1") -eq $true) { Write-Output "WN10-SO-000140" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-SO-000145"
+# "WN10-SO-000145"
 # "Anonymous enumeration of SAM accounts must not be allowed."
 if ($subcategoryAuditing.RestrictAnonymousSAM -ne 1) { Write-Output "WN10-SO-000145" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-SO-000150"
+# "WN10-SO-000150"
 # "Anonymous enumeration of shares must be restricted."
 if ($subcategoryAuditing.RestrictAnonymous -ne 1) { Write-Output "WN10-SO-000150" }
 
@@ -1408,3 +1425,58 @@ if ($lanmanServerParameters.RestrictNullSessAccess -ne 1) { Write-Output "WN10-S
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-SO-000167"
+# "Remote calls to the Security Account Manager (SAM) must be restricted to Administrators."
+if ($subcategoryAuditing.RestrictRemoteSAM -ne "O:BAG:BAD:(A;;RC;;;BA)") { Write-Output "WN10-SO-000167" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000180"
+# "NTLM must be prevented from falling back to a Null session."
+$msv1LSAChecks = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\LSA\MSV1_0\
+if ($msv1LSAChecks.allownullsessionfallback -ne 0) { Write-Output "WN10-SO-000180" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000185"
+# "PKU2U authentication using online identities must be prevented."
+$pku2LSAChecks = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\LSA\pku2u\
+if ($pku2LSAChecks.AllowOnlineID -ne 0) { Write-Output "WN10-SO-000185" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000190"
+# "Kerberos encryption types must be configured to prevent the use of DES and RC4 encryption suites."
+if ($certificateDeviceAuthCheck.SupportedEncryptionTypes -ne "2147483640") { Write-Output "WN10-SO-000190" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000195"
+# "The system must be configured to prevent the storage of the LAN Manager hash of passwords."
+if ($subcategoryAuditing.NoLMHash -ne 1) { Write-Output "WN10-SO-000195" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000205"
+# "The LanMan authentication level must be set to send NTLMv2 response only, and to refuse LM and NTLM."
+if ($subcategoryAuditing.LmCompatibilityLevel -ne 5) { Write-Output "WN10-SO-000205" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000210"
+# "The system must be configured to the required LDAP client signing level."
+$ldapServicesSettings = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LDAP\
+if ($ldapServicesSettings.LDAPClientIntegrity -ne 1) { Write-Output "WN10-SO-000210" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000215"
+# "The system must be configured to meet the minimum session security requirement for NTLM SSP based clients."
+if ($msv1LSAChecks.NTLMMinClientSec -ne 537395200) { Write-Output "WN10-SO-000215" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-SO-000220"
+
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
