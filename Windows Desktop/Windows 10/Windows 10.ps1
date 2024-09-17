@@ -147,8 +147,8 @@ if ($neverExpireAccounts -ne $null) { Write-Output "WN10-00-000090" }
 
 # "WN10-00-000095, WN10-SO-000160"
 # "Permissions for system files and directories must conform to minimum requirements."
-$everyoneincludesanonymous = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
-if ($everyoneincludesanonymous.everyoneincludesanonymous -ne 0) { Write-Output "WN10-00-000095, WN10-SO-000160" }
+$subcategoryAuditing = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
+if ($subcategoryAuditing.everyoneincludesanonymous -ne 0) { Write-Output "WN10-00-000095, WN10-SO-000160" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-00-000100"
@@ -437,7 +437,6 @@ if ($reversiblePasswordEncryption.Contains('0') -eq $false) { Write-Output "WN10
 # "WN10-SO-000030"
 # "Audit policy using subcategories must be enabled."
 # "Subsequent audit policy checks are dependent on this policy being enabled."
-$subcategoryAuditing = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
 if ($subcategoryAuditing.scenoapplylegacyauditpolicy -ne 1) { Write-Output "WN10-SO-000030" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -1166,3 +1165,128 @@ if ($currentVersionPoliciesSystem.DisableAutomaticRestartSignIn -ne 1) { Write-O
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-CC-000326"
+# "PowerShell script block logging must be enabled on Windows 10."
+$scriptBlockLogging = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging\
+if ($scriptBlockLogging.EnableScriptBlockLogging -ne 1) { Write-Output "WN10-CC-000326" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000328"
+# "The Windows Explorer Preview pane must be disabled for Windows 10."
+if ($webPubWizards.NoPreviewPane -ne 1) { Write-Output "WN10-CC-000328" }
+if ($webPubWizards.NoReadingPane -ne 1) { Write-Output "WN10-CC-000328" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000330"
+# "The Windows Remote Management (WinRM) client must not use Basic authentication."
+$winrmClientCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client\
+if ($winrmClientCheck.AllowBasic -ne 0) { Write-Output "WN10-CC-000330" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000335"
+# "The Windows Remote Management (WinRM) client must not allow unencrypted traffic."
+if ($winrmClientCheck.AllowUnencryptedTraffic -ne 0) { Write-Output "WN10-CC-000335" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000345"
+# "The Windows Remote Management (WinRM) service must not use Basic authentication."
+$winrmServiceCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service\
+if ($winrmServiceCheck.AllowBasic -ne 0) { Write-Output "WN10-CC-000345" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000350"
+# "The Windows Remote Management (WinRM) service must not allow unencrypted traffic."
+if ($winrmServiceCheck.AllowUnencryptedTraffic -ne 0) { Write-Output "WN10-CC-000350" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000355"
+# "The Windows Remote Management (WinRM) service must not store RunAs credentials."
+if ($winrmServiceCheck.DisableRunAs -ne 1) { Write-Output "WN10-CC-000355" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000360"
+# "The Windows Remote Management (WinRM) client must not use Digest authentication."
+if ($winrmClientCheck.AllowDigest -ne 0) { Write-Output "WN10-CC-000360" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000365"
+# "Windows 10 must be configured to prevent Windows apps from being activated by voice while the system is locked."
+$appPrivacySettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy\
+if ($appPrivacySettings.LetAppsActivateWithVoiceAboveLock -ne 2 -and $appPrivacySettings.LetAppsActivateWithVoice -ne 2) { Write-Output "WN10-CC-000365" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000370"
+# "The convenience PIN for Windows 10 must be disabled."
+if ($windowsSystemChecks.AllowDomainPINLogon -ne 0) { Write-Output "WN10-CC-000370" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000385"
+# "Windows Ink Workspace must be configured to disallow access above the lock."
+$windowsInkWorkspace = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace\
+if ($windowsInkWorkspace.AllowWindowsInkWorkspace -ne 1) { Write-Output "WN10-CC-000385" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000390"
+# "Windows 10 should be configured to prevent users from receiving suggestions for third-party or additional applications."
+$hkcuCloudContentSettingsCheck = Get-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\CloudContent\
+if ($hkcuCloudContentSettingsCheck.DisableThirdPartySuggestions -ne 1) { Write-Output "WN10-CC-000390" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-EP-000310"
+# "Windows 10 Kernel (Direct Memory Access) DMA Protection must be enabled."
+$kernelDmaProtection = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Kernel` DMA` Protection\
+if ($kernelDmaProtection.DeviceEnumerationPolicy -ne 0) { Write-Output "WN10-EP-000310" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "Deviation"
+# "WN10-PK-000005"
+# "WN10-PK-000010"
+# "WN10-PK-000015"
+# "WN10-PK-000020"
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-RG-000005"
+# "Default permissions for the HKEY_LOCAL_MACHINE registry hive must be maintained."
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000005"
+# "The built-in administrator account must be disabled."
+$disableBuiltInAdminCheck = $policyContent | Select-String "EnableAdminAccount" | Out-String
+if ($disableBuiltInAdminCheck.Contains("0") -eq $false) { Write-Output "WN10-SO-000005" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000010"
+# "The built-in guest account must be disabled."
+$disableBuiltInGuestCheck = $policyContent | Select-String "EnableGuestAccount" | Out-String
+if ($disableBuiltInGuestCheck.Contains("0") -eq $false) { Write-Output "WN10-SO-000010" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000015"
+# "Local accounts with blank passwords must be restricted to prevent access from the network."
+if ($subcategoryAuditing.LimitBlankPasswordUse -ne 1) { Write-Output "WN10-SO-000015" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000020"
+# "The built-in administrator account must be renamed."
+$newAdminName = $policyContent | Select-String "NewAdministratorName" | Out-String
+if ($newAdminName.Contains("Administrator") -eq $true) { Write-Output "WN10-SO-000010" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
