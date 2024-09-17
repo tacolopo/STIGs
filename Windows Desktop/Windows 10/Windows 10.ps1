@@ -47,30 +47,29 @@ if ($bitLocker.Contains('Off') -eq $true) { Write-Output "WN10-00-000030" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000031"
-"Systems must use a BitLocker PIN for pre-boot authentication."
+# "WN10-00-000031"
+# "Systems must use a BitLocker PIN for pre-boot authentication."
 $bitLockerPin = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\FVE\
-#check if and or or
-if ($bitLockerPin.UseAdvancedStartup -ne 1 -or $bitLockerPin.UseTPMPIN -notin @(1,2)) { Write-Output "WN10-00-000031" }
+if ($bitLockerPin.UseAdvancedStartup -notin @(1,2) -and $bitLockerPin.UseTPMPIN -notin @(1,2)) { Write-Output "WN10-00-000031" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000032"
-"BitLocker PIN must have a minimum length of six digits for pre-boot authentication."
-$bitLockerPin.MinimumPin #6 or greater
+# "WN10-00-000032"
+# "BitLocker PIN must have a minimum length of six digits for pre-boot authentication."
+if ($bitLockerPin.MinimumPin -lt 6) { Write-Output "WN10-00-000032" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000035"
-"Verify AppLocker is enabled"
+# "WN10-00-000035"
+# "Verify AppLocker is enabled"
 $appLocker = Get-AppLockerPolicy -Effective -Xml
-$appLocker.Contains('Type="Appx" EnforcementMode="Enabled"') #True
+if ($appLocker.Contains('Type="Appx" EnforcementMode="Enabled"') -eq $false) { Write-Output "WN10-00-000035" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000040"
-"Get Build Number"
-$os.OsBuildNumber #19045
+# "WN10-00-000040"
+# "Get Build Number"
+if ($os.OsBuildNumber -ne 19045) { Write-Output "WN10-00-000040" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1473,7 +1472,87 @@ if ($msv1LSAChecks.NTLMMinClientSec -ne 537395200) { Write-Output "WN10-SO-00021
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-SO-000220"
-
+# "WN10-SO-000220"
+# "The system must be configured to meet the minimum session security requirement for NTLM SSP based servers."
+if ($msv1LSAChecks.NTLMMinServerSec -ne 537395200) { Write-Output "WN10-SO-000220" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000230"
+# "The system must be configured to use FIPS-compliant algorithms for encryption, hashing, and signing."
+$fipsAlgorithmPolicy = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy\
+if ($fipsAlgorithmPolicy.Enabled -ne 1) { Write-Output "WN10-SO-000230" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000240"
+# "The default permissions of global system objects must be increased."
+$sessionManagerSettings = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Session` Manager\
+if ($sessionManagerSettings.ProtectionMode -ne 1) { Write-Output "WN10-SO-000240" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000245"
+# "User Account Control approval mode for the built-in Administrator must be enabled."
+if ($currentVersionPoliciesSystem.FilterAdministratorToken -ne 1) { Write-Output "WN10-SO-000245" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000250"
+# "User Account Control must, at minimum, prompt administrators for consent on the secure desktop."
+if ($currentVersionPoliciesSystem.ConsentPromptBehaviorAdmin -ne 2) { Write-Output "WN10-SO-000250" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "Deviation"
+# "WN10-SO-000251"
+# "Windows 10 must use multifactor authentication for local and network access to privileged and nonprivileged accounts."
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000255"
+# "User Account Control must automatically deny elevation requests for standard users."
+if ($currentVersionPoliciesSystem.ConsentPromptBehaviorUser -ne 0) { Write-Output "WN10-SO-000255" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000260"
+# "User Account Control must be configured to detect application installations and prompt for elevation."
+if ($currentVersionPoliciesSystem.EnableInstallerDetection -ne 1) { Write-Output "WN10-SO-000260" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000265"
+# "User Account Control must only elevate UIAccess applications that are installed in secure locations."
+if ($currentVersionPoliciesSystem.EnableSecureUIAPaths -ne 1) { Write-Output "WN10-SO-000265" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000270"
+# "User Account Control must run all administrators in Admin Approval Mode, enabling UAC."
+if ($currentVersionPoliciesSystem.EnableLUA -ne 1) { Write-Output "WN10-SO-000270" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000275"
+# "User Account Control must virtualize file and registry write failures to per-user locations."
+if ($currentVersionPoliciesSystem.EnableVirtualization -ne 1) { Write-Output "WN10-SO-000275" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000280"
+# "Passwords for enabled local Administrator accounts must be changed at least every 60 days."
+$adminAccountLastPasswordSet = (Get-LocalUser -Name * | Select-Object * | Where-Object {$_.Description -eq "Built-in account for administering the computer/domain" -and $_.Enabled -eq $true})
+if ($adminAccountLastPasswordSet) {
+    $lastPasswordSet = $adminAccountLastPasswordSet.PasswordLastSet
+    $daysSinceLastChange = (Get-Date) - $lastPasswordSet
+    if ($daysSinceLastChange.Days -gt 60) {
+        Write-Output "WN10-SO-000280"
+    }
+}
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
+
+
