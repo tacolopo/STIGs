@@ -6,55 +6,52 @@
 # Comment out all STIG ID Titles and descriptions. Print Out STIG ID for fail.
 # EDIT DEFENDER CHECKS TO TRELLIX CHECKS
 
-"WN10-00-000005"
-"Verify domain-joined systems are using Windows 10 Enterprise Edition 64-bit version"
+# "WN10-00-000005"
+# "Verify domain-joined systems are using Windows 10 Enterprise Edition 64-bit version"
 $os = Get-ComputerInfo
 $os.CsDNSHostName
-$os.CsDomainRole #MemberWorkstation
-$os.OsName #Windows 10 Enterprise
-$os.OsArchitecture #64-bit
+
+if ($os.CsDomainRole -eq "MemberWorkstation" -and $os.OsArchitecture -ne "64-bit") { Write-Output "WN10-00-000005" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000010"
-"Verify TPM is present and enabled"
+# "WN10-00-000010"
+# "Verify TPM is present and enabled"
 $tpm = Get-Tpm
-$tpm.TpmPresent #True
-$tpm.TpmEnabled #True
+if ($tpm.TpmPresent -eq $false -or $tpm.TpmEnabled -eq $false) { Write-Output "WN10-00-000010" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000015"
-"System must be configured to run in UEFI mode."
-$os.BiosFirmwareType #Uefi
+# "WN10-00-000015"
+# "System must be configured to run in UEFI mode."
+if ($os.BiosFirmwareType -ne "Uefi") { Write-Output "WN10-00-000015" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000020"
-"Secure Boot must be enabled."
+# "WN10-00-000020"
+# "Secure Boot must be enabled."
 $bootState = Confirm-SecureBootUEFI
-$bootState #True
+if ($bootState -eq $false) { Write-Output "WN10-00-000020" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000025"
-"An approved tool for continuous network scanning must be installed and configured to run."
-"True"
+# "WN10-00-000025"
+# "An approved tool for continuous network scanning must be installed and configured to run."
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-00-000030"
-"Systems must use BitLocker to encrypt all disks"
-$bitLocker = Get-BitLockerVolume
-$bitLocker.ProtectionStatus #On
+# "WN10-00-000030"
+# "Systems must use BitLocker to encrypt all disks"
+$bitLocker = (Get-BitLockerVolume).ProtectionStatus | Out-String
+if ($bitLocker.Contains('Off') -eq $true) { Write-Output "WN10-00-000030" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 "WN10-00-000031"
 "Systems must use a BitLocker PIN for pre-boot authentication."
 $bitLockerPin = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\FVE\
-$bitLockerPin.UseAdvancedStartup #1
-$bitLockerPin.UseTPMPIN #1 or 2
+#check if and or or
+if ($bitLockerPin.UseAdvancedStartup -ne 1 -or $bitLockerPin.UseTPMPIN -notin @(1,2)) { Write-Output "WN10-00-000031" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
