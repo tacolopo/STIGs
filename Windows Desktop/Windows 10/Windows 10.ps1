@@ -1290,3 +1290,49 @@ $newAdminName = $policyContent | Select-String "NewAdministratorName" | Out-Stri
 if ($newAdminName.Contains("Administrator") -eq $true) { Write-Output "WN10-SO-000010" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000025"
+# "The built-in guest account must be renamed."
+$newGuestName = $policyContent | Select-String "NewGuestName" | Out-String
+if ($newGuestName.Contains("Guest") -eq $true) { Write-Output "WN10-SO-000025" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000035"
+# "Outgoing secure channel traffic must be encrypted or signed."
+$netLogonParameters = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters\
+if ($netLogonParameters.RequireSignOrSeal -ne 1) { Write-Output "WN10-SO-000035" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000040"
+# "Outgoing secure channel traffic must be encrypted when possible."
+if ($netLogonParameters.SealSecureChannel -ne 1) { Write-Output "WN10-SO-000040" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000045"
+# "Outgoing secure channel traffic must be signed when possible."
+if ($netLogonParameters.SignSecureChannel -ne 1) { Write-Output "WN10-SO-000045" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000050"
+# "The computer account password must not be prevented from being reset."
+if ($netLogonParameters.DisablePasswordChange -ne 0) { Write-Output "WN10-SO-000050" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000055"
+# "The maximum age for machine account passwords must be configured to 30 days or less."
+if ($netLogonParameters.MaximumPasswordAge -notin 0..30) { Write-Output "WN10-SO-000055" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-SO-000060"
+# "The system must be configured to require a strong session key."
+if ($netLogonParameters.RequireStrongKey -ne 1) { Write-Output "WN10-SO-000060" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-SO-000065"
