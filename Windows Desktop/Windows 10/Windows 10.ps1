@@ -1714,3 +1714,91 @@ $disallowedDenyLogOnLocallySIDs = $denyLogOnLocallySIDs | Where-Object { $_ -not
 if ($disallowedDenyLogOnLocallySIDs) { Write-Output "WN10-UR-000085" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-UR-000090"
+# "If the following groups or accounts are not defined for the 'Deny log on through Remote Desktop Services' right, this is a finding. Enterprise Admins Group, Domain Admins Group, Local Account, Guests Group"
+"update root domain"
+$denyLogOnThroughRemoteDesktopServicesSIDs = ($policyContent | Select-String "SeDenyRemoteInteractiveLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedDenyLogOnThroughRemoteDesktopServicesSIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512", "*S-1-5-32-546", "*S-1-5-32-113")
+$disallowedDenyLogOnThroughRemoteDesktopServicesSIDs = $denyLogOnThroughRemoteDesktopServicesSIDs | Where-Object { $_ -notlike $allowedDenyLogOnThroughRemoteDesktopServicesSIDs[0] -and $_ -notlike $allowedDenyLogOnThroughRemoteDesktopServicesSIDs[1] -and $_ -notlike $allowedDenyLogOnThroughRemoteDesktopServicesSIDs[2] -and $_ -notlike $allowedDenyLogOnThroughRemoteDesktopServicesSIDs[3] }
+if ($disallowedDenyLogOnThroughRemoteDesktopServicesSIDs) { Write-Output "WN10-UR-000090" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000095"
+# "The Enable computer and user accounts to be trusted for delegation user right must not be assigned to any groups or accounts."
+$enableComputerAndUserAccountsToBeTrustedForDelegationSIDs = $policyContent | Select-String "SeEnableDelegationPrivilege" | Out-String
+if ($enableComputerAndUserAccountsToBeTrustedForDelegationSIDs.Contains('*S-1') -eq $true) { Write-Output "WN10-UR-000095" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000100"
+# "The Force shutdown from a remote system user right must only be assigned to the Administrators group."
+$forceShutdownFromRemoteSystemSIDs = ($policyContent | Select-String "SeRemoteShutdownPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedForceShutdownFromRemoteSystemSIDs = @("*S-1-5-32-544")
+$disallowedForceShutdownFromRemoteSystemSIDs = $forceShutdownFromRemoteSystemSIDs | Where-Object { $_ -notlike $allowedForceShutdownFromRemoteSystemSIDs[0] }
+if ($disallowedForceShutdownFromRemoteSystemSIDs) { Write-Output "WN10-UR-000100" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000110"
+# "The Impersonate a client after authentication user right must only be assigned to Administrators, Service, Local Service, and Network Service."
+$impersonateAClientAfterAuthenticationSIDs = ($policyContent | Select-String "SeImpersonatePrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedImpersonateAClientAfterAuthenticationSIDs = @("*S-1-5-32-544", "*S-1-5-6", "*S-1-5-19", "*S-1-5-20")
+$disallowedImpersonateAClientAfterAuthenticationSIDs = $impersonateAClientAfterAuthenticationSIDs | Where-Object { $_ -notlike $allowedImpersonateAClientAfterAuthenticationSIDs[0] -and $_ -notlike $allowedImpersonateAClientAfterAuthenticationSIDs[1] -and $_ -notlike $allowedImpersonateAClientAfterAuthenticationSIDs[2] -and $_ -notlike $allowedImpersonateAClientAfterAuthenticationSIDs[3] }
+if ($disallowedImpersonateAClientAfterAuthenticationSIDs) { Write-Output "WN10-UR-000110" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000120"
+# "The Load and unload device drivers user right must only be assigned to the Administrators group."
+$loadAndUnloadDeviceDriversSIDs = ($policyContent | Select-String "SeLoadDriverPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedLoadAndUnloadDeviceDriversSIDs = @("*S-1-5-32-544")
+$disallowedLoadAndUnloadDeviceDriversSIDs = $loadAndUnloadDeviceDriversSIDs | Where-Object { $_ -notlike $allowedLoadAndUnloadDeviceDriversSIDs[0] }
+if ($disallowedLoadAndUnloadDeviceDriversSIDs) { Write-Output "WN10-UR-000120" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000125"
+# "The Lock pages in memory user right must not be assigned to any groups or accounts."
+$lockPagesInMemorySIDs = $policyContent | Select-String "SeLockMemoryPrivilege" | Out-String
+if ($lockPagesInMemorySIDs.Contains('*S-1') -eq $true) { Write-Output "WN10-UR-000125" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000130"
+# "The Manage auditing and security log user right must only be assigned to the Administrators group."
+$manageAuditingAndSecurityLogSIDs = ($policyContent | Select-String "SeSecurityPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedManageAuditingAndSecurityLogSIDs = @("*S-1-5-32-544")
+$disallowedManageAuditingAndSecurityLogSIDs = $manageAuditingAndSecurityLogSIDs | Where-Object { $_ -notlike $allowedManageAuditingAndSecurityLogSIDs[0] }
+if ($disallowedManageAuditingAndSecurityLogSIDs) { Write-Output "WN10-UR-000130" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000140"
+# "The Modify firmware environment values user right must only be assigned to the Administrators group."
+$modifyFirmwareEnvironmentValuesSIDs = ($policyContent | Select-String "SeSystemEnvironmentPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedModifyFirmwareEnvironmentValuesSIDs = @("*S-1-5-32-544")
+$disallowedModifyFirmwareEnvironmentValuesSIDs = $modifyFirmwareEnvironmentValuesSIDs | Where-Object { $_ -notlike $allowedModifyFirmwareEnvironmentValuesSIDs[0] }
+if ($disallowedModifyFirmwareEnvironmentValuesSIDs) { Write-Output "WN10-UR-000140" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000145"
+# "The Perform volume maintenance tasks user right must only be assigned to the Administrators group."
+$performVolumeMaintenanceTasksSIDs = ($policyContent | Select-String "SeManageVolumePrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedPerformVolumeMaintenanceTasksSIDs = @("*S-1-5-32-544")
+$disallowedPerformVolumeMaintenanceTasksSIDs = $performVolumeMaintenanceTasksSIDs | Where-Object { $_ -notlike $allowedPerformVolumeMaintenanceTasksSIDs[0] }
+if ($disallowedPerformVolumeMaintenanceTasksSIDs) { Write-Output "WN10-UR-000145" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000150"
+# "The Profile single process user right must only be assigned to the Administrators group."
+$profileSingleProcessSIDs = ($policyContent | Select-String "SeProfileSingleProcessPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedProfileSingleProcessSIDs = @("*S-1-5-32-544")
+$disallowedProfileSingleProcessSIDs = $profileSingleProcessSIDs | Where-Object { $_ -notlike $allowedProfileSingleProcessSIDs[0] }
+if ($disallowedProfileSingleProcessSIDs) { Write-Output "WN10-UR-000150" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
