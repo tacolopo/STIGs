@@ -483,10 +483,10 @@ if ($credentialValidationCheck.Contains('Success') -eq $false) { Write-Output "W
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# "WN10-AU-000050"
-# "The system must be configured to audit Detailed Tracking - Process Creation successes."
+# "WN10-AU-000050, WN10-AU-000585"
+# "The system must be configured to audit Detailed Tracking - Process Creation successes and failures."
 $procCreationCheck = $auditPolicyAll | Select-String "Process Creation" | Out-String
-if ($procCreationCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000050" }
+if ($procCreationCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000050, WN10-AU-000585" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1271,7 +1271,7 @@ if ($kernelDmaProtection.DeviceEnumerationPolicy -ne 0) { Write-Output "WN10-EP-
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# "WN10-RG-000005"
+"WN10-RG-000005"
 # "Default permissions for the HKEY_LOCAL_MACHINE registry hive must be maintained."
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -1802,3 +1802,53 @@ if ($disallowedProfileSingleProcessSIDs) { Write-Output "WN10-UR-000150" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-UR-000160"
+# "The Restore files and directories user right must only be assigned to the Administrators group."
+$restoreFilesAndDirectoriesSIDs = ($policyContent | Select-String "SeRestorePrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedRestoreFilesAndDirectoriesSIDs = @("*S-1-5-32-544")
+$disallowedRestoreFilesAndDirectoriesSIDs = $restoreFilesAndDirectoriesSIDs | Where-Object { $_ -notlike $allowedRestoreFilesAndDirectoriesSIDs[0] }
+if ($disallowedRestoreFilesAndDirectoriesSIDs) { Write-Output "WN10-UR-000160" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000165"
+# "The Take ownership of files or other objects user right must only be assigned to the Administrators group."
+$takeOwnershipOfFilesOrOtherObjectsSIDs = ($policyContent | Select-String "SeTakeOwnershipPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedTakeOwnershipOfFilesOrOtherObjectsSIDs = @("*S-1-5-32-544")
+$disallowedTakeOwnershipOfFilesOrOtherObjectsSIDs = $takeOwnershipOfFilesOrOtherObjectsSIDs | Where-Object { $_ -notlike $allowedTakeOwnershipOfFilesOrOtherObjectsSIDs[0] }
+if ($disallowedTakeOwnershipOfFilesOrOtherObjectsSIDs) { Write-Output "WN10-UR-000165" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000050"
+# "Hardened UNC paths must be defined to require mutual authentication and integrity for at least the \\*\SYSVOL and \\*\NETLOGON shares."
+$hardenedPaths = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths\
+if ($hardenedPaths."\\*\SYSVOL" -ne 'RequireMutualAuthentication=1,RequireIntegrity=1' -or $hardenedPaths."\\*\NETLOGON" -ne 'RequireMutualAuthentication=1,RequireIntegrity=1') { Write-Output "WN10-CC-000050" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000327"
+# "PowerShell Transcription must be enabled on Windows 10."
+$psTranscriptionCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription\
+if ($psTranscriptionCheck.EnableTranscripting -ne 1) { Write-Output "WN10-CC-000327" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000080"
+# "Virtualization-based protection of code integrity must be enabled."
+$secServicesRunningCheck = $vbsDetailsCheck.SecurityServicesRunning | Out-String
+if ($secServicesRunningCheck.Contains(2) -eq $false) { Write-Output "WN10-CC-000080" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-CC-000391"
+# "Internet Explorer must be disabled for Windows 10."
+$ieInstalled = $allInstalledSoftware | Where-Object { $_.Name -like "*Internet Explorer*" }
+if ($ieInstalled -ne $null) { Write-Output "WN10-CC-000391" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-00-000395"
+# "Windows 10 must not have portproxy enabled or in use."
+$portProxyCheck = netsh interface portproxy show all
+if ($portProxyCheck -ne $null -and $portProxyCheck.Trim() -ne '') { Write-Output "WN10-00-000395" }
