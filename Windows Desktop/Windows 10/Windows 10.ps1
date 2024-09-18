@@ -1617,4 +1617,100 @@ if ($disallowedChangeSystemTimeSIDs) { Write-Output "WN10-UR-000035" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-UR-000040"
+# "WN10-UR-000040"
+# "The Create a pagefile user right must only be assigned to the Administrators group."
+$createPagefileSIDs = ($policyContent | Select-String "SeCreatePagefilePrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedCreatePagefileSIDs = @("*S-1-5-32-544")
+$disallowedCreatePagefileSIDs = $createPagefileSIDs | Where-Object { $_ -notlike $allowedCreatePagefileSIDs[0] }
+if ($disallowedCreatePagefileSIDs) { Write-Output "WN10-UR-000040" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000045"
+# "The Create a token object user right must not be assigned to any groups or accounts."
+$createTokenObjectSIDs = $policyContent | Select-String "SeCreateTokenPrivilege" | Out-String
+if ($createTokenObjectSIDs.Contains('*S-1') -eq $true) { Write-Output "WN10-UR-000045" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000050"
+# "The Create global objects user right must only be assigned to Administrators, Service, Local Service, and Network Service."
+$createGlobalObjectsSIDs = ($policyContent | Select-String "SeCreateGlobalPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedCreateGlobalObjectsSIDs = @("*S-1-5-32-544", "*S-1-5-6", "*S-1-5-19", "*S-1-5-20")
+$disallowedCreateGlobalObjectsSIDs = $createGlobalObjectsSIDs | Where-Object { $_ -notlike $allowedCreateGlobalObjectsSIDs[0] -and $_ -notlike $allowedCreateGlobalObjectsSIDs[1] -and $_ -notlike $allowedCreateGlobalObjectsSIDs[2] -and $_ -notlike $allowedCreateGlobalObjectsSIDs[3] }
+if ($disallowedCreateGlobalObjectsSIDs) { Write-Output "WN10-UR-000050" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000055"
+# "The Create permanent shared objects user right must not be assigned to any groups or accounts."
+$createPermanentSharedObjectsSIDs = $policyContent | Select-String "SeCreatePermanentPrivilege" | Out-String
+if ($createPermanentSharedObjectsSIDs.Contains('*S-1') -eq $true) { Write-Output "WN10-UR-000055" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000060"
+# "The Create symbolic links user right must only be assigned to the Administrators group."
+$createSymbolicLinksSIDs = ($policyContent | Select-String "SeCreateSymbolicLinkPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedCreateSymbolicLinksSIDs = @("*S-1-5-32-544")
+$disallowedCreateSymbolicLinksSIDs = $createSymbolicLinksSIDs | Where-Object { $_ -notlike $allowedCreateSymbolicLinksSIDs[0] }
+if ($disallowedCreateSymbolicLinksSIDs) { Write-Output "WN10-UR-000060" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000065"
+# "The Debug programs user right must only be assigned to the Administrators group."
+$debugProgramsSIDs = ($policyContent | Select-String "SeDebugPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedDebugProgramsSIDs = @("*S-1-5-32-544")
+$disallowedDebugProgramsSIDs = $debugProgramsSIDs | Where-Object { $_ -notlike $allowedDebugProgramsSIDs[0] }
+if ($disallowedDebugProgramsSIDs) { Write-Output "WN10-UR-000065" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-UR-000070"
+# "If the following groups or accounts are not defined for the 'Deny access to this computer from the network' right, this is a finding:
+
+# Domain Systems Only:
+# Enterprise Admins group
+# Domain Admins group
+# Local account (see Note below)
+
+# All Systems:
+# Guests group"
+"update root domain"
+$denyAccessToThisComputerSIDs = ($policyContent | Select-String "SeDenyNetworkLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedDenyAccessToThisComputerSIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512", "*S-1-5-32-546", "*S-1-5-32-113")
+$disallowedDenyAccessToThisComputerSIDs = $denyAccessToThisComputerSIDs | Where-Object { $_ -notlike $allowedDenyAccessToThisComputerSIDs[0] -and $_ -notlike $allowedDenyAccessToThisComputerSIDs[1] -and $_ -notlike $allowedDenyAccessToThisComputerSIDs[2] -and $_ -notlike $allowedDenyAccessToThisComputerSIDs[3] }
+if ($disallowedDenyAccessToThisComputerSIDs) { Write-Output "WN10-UR-000070" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-UR-000075"
+# "If the following groups or accounts are not defined for the 'Deny log on as a batch job' right, this is a finding: Enterprise Admin Group, Domain Admin Group"
+"update root domain"
+$denyLogOnAsBatchJobSIDs = ($policyContent | Select-String "SeDenyBatchLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedDenyLogOnAsBatchJobSIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512")
+$disallowedDenyLogOnAsBatchJobSIDs = $denyLogOnAsBatchJobSIDs | Where-Object { $_ -notlike $allowedDenyLogOnAsBatchJobSIDs[0] -and $_ -notlike $allowedDenyLogOnAsBatchJobSIDs[1] }
+if ($disallowedDenyLogOnAsBatchJobSIDs) { Write-Output "WN10-UR-000075" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-UR-000080"
+# "If the following groups or accounts are not defined for the 'Deny log on as a service' right, this is a finding: Enterprise Admins Group, Domain Admins Group"
+"update root domain"
+$denyLogOnAsServiceSIDs = ($policyContent | Select-String "SeDenyServiceLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedDenyLogOnAsServiceSIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512")
+$disallowedDenyLogOnAsServiceSIDs = $denyLogOnAsServiceSIDs | Where-Object { $_ -notlike $allowedDenyLogOnAsServiceSIDs[0] -and $_ -notlike $allowedDenyLogOnAsServiceSIDs[1] }
+if ($disallowedDenyLogOnAsServiceSIDs) { Write-Output "WN10-UR-000080" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-UR-000085"
+# "If the following groups or accounts are not defined for the 'Deny log on locally' right, this is a finding. Enterprise Admins Group, Domain Admins Group, Guests Group"
+"update root domain"
+$denyLogOnLocallySIDs = ($policyContent | Select-String "SeDenyInteractiveLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedDenyLogOnLocallySIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512", "*S-1-5-32-546")
+$disallowedDenyLogOnLocallySIDs = $denyLogOnLocallySIDs | Where-Object { $_ -notlike $allowedDenyLogOnLocallySIDs[0] -and $_ -notlike $allowedDenyLogOnLocallySIDs[1] -and $_ -notlike $allowedDenyLogOnLocallySIDs[2] }
+if ($disallowedDenyLogOnLocallySIDs) { Write-Output "WN10-UR-000085" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
