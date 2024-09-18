@@ -1271,8 +1271,21 @@ if ($kernelDmaProtection.DeviceEnumerationPolicy -ne 0) { Write-Output "WN10-EP-
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"WN10-RG-000005"
+# "WN10-RG-000005"
 # "Default permissions for the HKEY_LOCAL_MACHINE registry hive must be maintained."
+
+$hklmSoftwareACL = Get-Acl -Path HKLM:SOFTWARE | % { $_.access }
+$softwareIsInherited = $hklmSoftwareACL.IsInherited
+$softwareFullControlAdmin = $hklmSoftwareACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Administrators" }
+$softwareReadkeyUsers = $hklmSoftwareACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Users" }
+$hklmSystemACL = Get-Acl -Path HKLM:SYSTEM | % { $_.access }
+$systemIsInherited = $hklmSystemACL.IsInherited
+$systemFullControlAdmin = $hklmSystemACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Administrators" }
+$systemReadkeyUsers = $hklmSystemACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Users" }
+
+if ($softwareReadkeyUsers.Contains("ReadKey") -or $systemReadkeyUsers.Contains("ReadKey") -eq $false) { Write-Output "WN10-RG-000005" }
+if ($softwareIsInherited.Contains("True") -or $systemIsInherited.Contains("True") -eq $true) { Write-Output "WN10-RG-000005" }
+if ($softwareFullControlAdmin.Contains("FullControl") -or $systemFullControlAdmin.Contains("FullControl") -eq $false) { Write-Output "WN10-RG-000005" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
