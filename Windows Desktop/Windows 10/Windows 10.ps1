@@ -1553,6 +1553,68 @@ if ($adminAccountLastPasswordSet) {
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-UC-000015"
+# "Toast notifications to the lock screen must be turned off."
+$pushNotifications = Get-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications\
+if ($pushNotifications.NoToastApplicationNotificationOnLockScreen -ne 1) { Write-Output "WN10-UC-000015" }
 
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "WN10-UC-000020"
+# "Zone information must be preserved when saving attachments."
+$attachmentsPolicies = Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments\
+if ($attachmentsPolicies.SaveZoneInformation -notin @(2, $null)) { Write-Output "WN10-UC-000020" }
 
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000005"
+# "The Access Credential Manager as a trusted caller user right must not be assigned to any groups or accounts."
+$accessCredManagerCheck = $policyContent | Select-String "SeTrustedCredManAccessPrivilege" | Out-String
+if ($accessCredManagerCheck.Contains('*S-1') -eq $true) { Write-Output "WN10-UR-000005" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000010"
+# "The Access this computer from the network user right must only be assigned to the Administrators and Remote Desktop Users groups."
+$accessThisComputerCheck = ($policyContent | Select-String "SeNetworkLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedSIDs = @("*S-1-5-32-544", "*S-1-5-32-555")
+$disallowedSIDs = $accessThisComputerCheck | Where-Object { $_ -notlike $allowedSIDs[0] -and $_ -notlike $allowedSIDs[1] }
+if ($disallowedSIDs) { Write-Output "WN10-UR-000010" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000015"
+# "The Act as part of the operating system user right must not be assigned to any groups or accounts."
+$actAsPartOfOSCheck = $policyContent | Select-String "SeTcbPrivilege" | Out-String
+if ($actAsPartOfOSCheck.Contains('*S-1') -eq $true) { Write-Output "WN10-UR-000015" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000025"
+# "The Allow log on locally user right must only be assigned to the Administrators and Users groups."
+$logOnLocallySIDs = ($policyContent | Select-String "SeInteractiveLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedlogonSIDs = @("*S-1-5-32-544", "*S-1-5-32-545")
+$disallowedlogonSIDs = $logOnLocallySIDs | Where-Object { $_ -notlike $allowedlogonSIDs[0] -and $_ -notlike $allowedlogonSIDs[1] }
+if ($disallowedlogonSIDs) { Write-Output "WN10-UR-000025" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000030"
+# "The Back up files and directories user right must only be assigned to the Administrators group."
+$backupPrivilegeSIDs = ($policyContent | Select-String "SeBackupPrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedBackupSIDs = @("*S-1-5-32-544")
+$disallowedBackupSIDs = $backupPrivilegeSIDs | Where-Object { $_ -notlike $allowedBackupSIDs[0] }
+if ($disallowedBackupSIDs) { Write-Output "WN10-UR-000030" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "WN10-UR-000035"
+# "The Change the system time user right must only be assigned to Administrators and Local Service and NT SERVICE\autotimesvc."
+$changeSystemTimeSIDs = ($policyContent | Select-String "SeSystemtimePrivilege" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
+$allowedChangeSystemTimeSIDs = @("*S-1-5-19", "*S-1-5-32-544")
+$disallowedChangeSystemTimeSIDs = $changeSystemTimeSIDs | Where-Object { $_ -notlike $allowedChangeSystemTimeSIDs[0] -and $_ -notlike $allowedChangeSystemTimeSIDs[1] }
+if ($disallowedChangeSystemTimeSIDs) { Write-Output "WN10-UR-000035" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"WN10-UR-000040"
