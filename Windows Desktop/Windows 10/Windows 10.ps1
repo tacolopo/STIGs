@@ -37,6 +37,9 @@ if ($bootState -eq $false) { Write-Output "WN10-00-000020" }
 
 # "WN10-00-000025"
 # "An approved tool for continuous network scanning must be installed and configured to run."
+$allInstalledSoftware = Get-WmiObject -Class Win32_Product
+$isTenableInstalled = $allInstalledSoftware | Where-Object { $_.Name -like "*Nessus Agent (x64)" }
+if ($isTenableInstalled -eq $null) { Write-Output "WN10-00-000025" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -106,7 +109,6 @@ if ($shareNames | Where-Object { $_ -notin $allowedShares }) { Write-Output "WN1
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"Confirm whether noaccess account is allowed"
 # "WN10-00-000065"
 # "Confirm accounts last login
 ([ADSI]('WinNT://{0}' -f $env:COMPUTERNAME)).Children | Where { $_.SchemaClassName -eq 'user' } | ForEach {
@@ -164,7 +166,6 @@ if ($subcategoryAuditing.everyoneincludesanonymous -ne 0) { Write-Output "WN10-0
 
 # "WN10-00-000100"
 # "Internet Information System (IIS) or its subcomponents must not be installed"
-$allInstalledSoftware = Get-WmiObject -Class Win32_Product
 $iisInstalled = $allInstalledSoftware | Where-Object { $_.Name -like "*Internet Information Services*" }
 if ($iisInstalled -ne $null) { Write-Output "WN10-00-000100" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
