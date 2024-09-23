@@ -83,8 +83,9 @@ if ($firefoxSettings.PasswordManagerEnabled -ne "0") { Write-Output "FFOX-00-000
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# "FFOX-00-000009"
-# "Firefox must be configured to block pop-up windows."
+"FFOX-00-000009"
+"Firefox must be configured to block pop-up windows."
+"Need access to the content-prefs.sqlite file"
 $firefoxPopUpBlocker = Get-ItemProperty -Path "HKLM:\Software\Policies\Mozilla\Firefox\PopupBlocking"
 if ($firefoxPopUpBlocker.Enabled -ne "1") { Write-Output "FFOX-00-000009" }
 
@@ -118,6 +119,67 @@ if ($firefoxSettings.DisableTelemetry -ne "1" -or $firefoxPreferences -notcontai
 # "FFOX-00-000015"
 # "Firefox development tools must be disabled."
 if ($firefoxSettings.DisableDeveloperTools -ne "1") { Write-Output "FFOX-00-000015" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000016"
+# "Deviation"
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000018"
+# "Firefox must prevent the user from quickly deleting data."
+if ($firefoxSettings.DisableForgetButton -ne "1") { Write-Output "FFOX-00-000018" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000019"
+# "Firefox private browsing must be disabled."
+if ($firefoxSettings.DisablePrivateBrowsing -ne "1") { Write-Output "FFOX-00-000019" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000020"
+# "Firefox search suggestions must be disabled."
+if ($firefoxPreferences -notcontains 'user_pref("browser.search.suggest.enabled", false);') { Write-Output "FFOX-00-000020" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000021"
+# "Firefox autoplay must be disabled."
+$firefoxAutoplayPermissions = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Mozilla\Firefox\Permissions\Autoplay
+if ($firefoxAutoplayPermissions.Default -ne "block-audio-video") { Write-Output "FFOX-00-000021" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000022"
+# "Firefox network prediction must be disabled."
+if ($firefoxSettings.NetworkPrediction -ne "0") { Write-Output "FFOX-00-000022" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000023"
+# "Firefox fingerprinting protection must be enabled."
+$firefoxTrackingProtection = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\EnableTrackingProtection
+if ($firefoxTrackingProtection.Fingerprinting -ne "1") { Write-Output "FFOX-00-000023" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000024"
+# "Firefox cryptomining protection must be enabled."
+if ($firefoxTrackingProtection.Cryptomining -ne "1") { Write-Output "FFOX-00-000024" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000025"
+# "Firefox Enhanced Tracking Protection must be enabled."
+if ($firefoxPreferences -notcontains 'user_pref("browser.contentblocking.category", "strict");') { Write-Output "FFOX-00-000025" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000026"
+# "Firefox extension recommendations must be disabled."
+if ($firefoxPreferences -notcontains 'user_pref("extensions.htmlaboutaddons.recommendations.enabled", false);') { Write-Output "FFOX-00-000026" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
