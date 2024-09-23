@@ -83,11 +83,11 @@ if ($firefoxSettings.PasswordManagerEnabled -ne "0") { Write-Output "FFOX-00-000
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"FFOX-00-000009"
-"Firefox must be configured to block pop-up windows."
-"Need access to the content-prefs.sqlite file"
-$firefoxPopUpBlocker = Get-ItemProperty -Path "HKLM:\Software\Policies\Mozilla\Firefox\PopupBlocking"
-if ($firefoxPopUpBlocker.Enabled -ne "1") { Write-Output "FFOX-00-000009" }
+# "FFOX-00-000009"
+# "Firefox must be configured to block pop-up windows."
+# "Need access to the permissions.sqlite and content-prefs.sqlite files"
+# $firefoxPopUpBlocker = Get-ItemProperty -Path "HKLM:\Software\Policies\Mozilla\Firefox\PopupBlocking"
+# if ($firefoxPopUpBlocker.Enabled -ne "1") { Write-Output "FFOX-00-000009" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -224,7 +224,7 @@ if ($firefoxSettings.DisableFeedbackCommands -ne "1") { Write-Output "FFOX-00-00
 
 # "FFOX-00-000037"
 # "Firefox encrypted media extensions must be disabled."
-if ($firefoxSettings.EncryptedMediaExtensions -ne "0") { Write-Output "FFOX-00-000037" }
+if ($firefoxSettings.EncryptedMediaExtensions -ne "0" -and $mozillaCfg.Contains('"media.eme.enabled", false') -eq $false) { Write-Output "FFOX-00-000037" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
