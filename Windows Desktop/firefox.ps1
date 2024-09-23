@@ -183,3 +183,36 @@ if ($firefoxPreferences -notcontains 'user_pref("extensions.htmlaboutaddons.reco
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "FFOX-00-000027"
+# "Firefox deprecated ciphers must be disabled."
+$disabledFirefoxCiphers = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Mozilla\Firefox\DisabledCiphers
+if ($disabledFirefoxCiphers.TLS_RSA_WITH_3DES_EDE_CBC_SHA -notin @("1", "true")) { Write-Output "FFOX-00-000027" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000028"
+# "Firefox must not recommend extensions as the user is using the browser."
+$firefoxUserMessaging = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\UserMessaging
+if ($firefoxSettings.ExtensionRecommendations -ne "0" -or $firefoxUserMessaging.ExtensionRecommendations -ne "0") { Write-Output "FFOX-00-000028" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000029"
+# "The Firefox New Tab page must not show Top Sites, Sponsored Top Sites, Pocket Recommendations, Sponsored Pocket Stories, Searches, Highlights, or Snippets."
+$firefoxHomePageSettings = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\HomePage
+if ($firefoxHomePageSettings.TopSites -ne "0" -or $firefoxHomePageSettings.SponsoredTopSites -ne "0" -or $firefoxHomePageSettings.Pocket -ne "0" -or $firefoxHomePageSettings.SponsoredPocket -ne "0" -or $firefoxHomePageSettings.Search -ne "0" -or $firefoxHomePageSettings.Highlights -ne "0" -or $firefoxHomePageSettings.Snippets -ne "0") { Write-Output "FFOX-00-000029" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000033"
+# "Firefox must be configured so that DNS over HTTPS is disabled."
+# "Disagree with STIG recommendation so N/A"
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000034"
+# "Firefox accounts must be disabled."
+if ($firefoxSettings.DisableFirefoxAccounts -ne "1") { Write-Output "FFOX-00-000034" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
