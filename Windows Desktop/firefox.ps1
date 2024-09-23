@@ -71,3 +71,53 @@ foreach ($item in $list) {
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "FFOX-00-000007"
+# "Firefox must be configured to disable form fill assistance."
+if ($firefoxSettings.DisableFormHistory -ne "1") { Write-Output "FFOX-00-000007" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000008"
+# "Firefox must be configured to not use a password store with or without a master password."
+if ($firefoxSettings.PasswordManagerEnabled -ne "0") { Write-Output "FFOX-00-000008" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000009"
+# "Firefox must be configured to block pop-up windows."
+$firefoxPopUpBlocker = Get-ItemProperty -Path "HKLM:\Software\Policies\Mozilla\Firefox\PopupBlocking"
+if ($firefoxPopUpBlocker.Enabled -ne "1") { Write-Output "FFOX-00-000009" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000010"
+# "Firefox must be configured to prevent JavaScript from moving or resizing windows."
+if ($firefoxPreferences -notcontains 'user_pref("dom.disable_window_move_resize", true);') { Write-Output "FFOX-00-000010" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000011"
+# "Firefox must be configured to prevent JavaScript from raising or lowering windows."
+if ($firefoxPreferences -notcontains 'user_pref("dom.disable_window_flip", true);') { Write-Output "FFOX-00-000011" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000013"
+# "Firefox must be configured to disable the installation of extensions."
+$firefoxAddonsPermissionsCheck = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\InstallAddonsPermission
+if ($firefoxAddonsPermissionsCheck -eq $null) { Write-Output "FFOX-00-000013" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000014"
+# "Background submission of information to Mozilla must be disabled."
+if ($firefoxSettings.DisableTelemetry -ne "1" -or $firefoxPreferences -notcontains 'user_pref("toolkit.telemetry.rejected", true);') { Write-Output "FFOX-00-000014" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000015"
+# "Firefox development tools must be disabled."
+if ($firefoxSettings.DisableDeveloperTools -ne "1") { Write-Output "FFOX-00-000015" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
