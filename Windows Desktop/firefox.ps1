@@ -4,6 +4,26 @@
 
 #Registry Keys come from https://admx.help?Category=Firefox&Policy=Mozilla.Policies.Firefox and https://mozilla.github.io/policy-templates/
 
+#define some commonly used variables
+$mozillaCfg = Get-Content "C:\Program Files\Mozilla Firefox\mozilla.cfg" | Out-String
+
+$validFirefoxUsers = Get-ChildItem C:\Users | Where-Object { $_.PSIsContainer }
+foreach ($possibleFirefoxUser in $validFirefoxUsers) {
+    $firefoxPath = "$($possibleFirefoxUser.FullName)\AppData\Roaming\Mozilla\Firefox"
+    if (Test-Path $firefoxPath) {
+        $profilePath = Get-ChildItem -Path "$firefoxPath\Profiles" -Directory | Where-Object { $_.Name -like "*.default-release" } | Select-Object -First 1 -ExpandProperty FullName
+        if ($profilePath) {
+            $firefoxPreferences = Get-Content "$profilePath\prefs.js" | Out-String
+            break
+        }
+    }
+}
+
+$firefoxHandlers = Get-Content "$profilePath\handlers.json" | Out-String
+
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 # "FFOX-00-000001"
 # "The installed version of Firefox must be supported."
 $firefoxVersion = (Get-ItemProperty "HKLM:\Software\Mozilla\Mozilla Firefox").CurrentVersion | Out-String
@@ -14,52 +34,32 @@ if ($firefoxVersion.Contains("130.0") -eq $false) { Write-Output "FFOX-00-000001
 # "FFOX-00-000002"
 # "Firefox must be configured to allow only TLS 1.2 or above."
 $firefoxSettings = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\
-if ($firefoxSettings.SSLVersionMin -ne "tls1.2") { Write-Output "FFOX-00-000002" }
+if ($firefoxSettings.SSLVersionMin -ne "tls1.2" -and $mozillaCfg.Contains('"security.tls.version.min", 3') -eq $false -and $mozillaCfg.Contains('"security.tls.version.min", 4') -eq $false) { Write-Output "FFOX-00-000002" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000003"
 # "Firefox must be configured to ask which certificate to present to a website when a certificate is required."
-$validFirefoxUsers = Get-ChildItem C:\Users | Where-Object { $_.PSIsContainer }
-foreach ($possibleFirefoxUser in $validFirefoxUsers) {
-    $firefoxPath = "$($possibleFirefoxUser.FullName)\AppData\Roaming\Mozilla\Firefox"
-    if (Test-Path $firefoxPath) {
-        $profilePath = Get-ChildItem -Path "$firefoxPath\Profiles" -Directory | Where-Object { $_.Name -like "*.default-release" } | Select-Object -First 1 -ExpandProperty FullName
-        if ($profilePath) {
-            $firefoxPreferences = Get-Content "$profilePath\prefs.js"
-            break
-        }
-    }
-}
-if ($firefoxPreferences -notcontains 'user_pref("security.default_personal_cert", "Ask Every Time");') { Write-Output "FFOX-00-000003" }
+
+if ($firefoxPreferences.Contains('"security.default_personal_cert", "Ask Every Time"') -eq $false -and $mozillaCfg.Contains('"security.default_personal_cert", "Ask Every Time"') -eq $false) { Write-Output "FFOX-00-000003" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000004"
 # "Firefox must be configured to not automatically check for updated versions of installed search plugins."
-if ($firefoxPreferences -notcontains 'user_pref("browser.search.update", false);') { Write-Output "FFOX-00-000004" }
+if ($firefoxPreferences.Contains('"browser.search.update", false') -eq $false -and $mozillaCfg.Contains('"browser.search.update", false') -eq $false) { Write-Output "FFOX-00-000004" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000005"
 # "Firefox must be configured to not automatically update installed add-ons and plugins."
-if ($firefoxSettings.ExtensionUpdate -ne "0") { Write-Output "FFOX-00-000005" }
+if ($firefoxSettings.ExtensionUpdate -ne "0" -and $mozillaCfg.Contains('"extensions.update.enabled", false') -eq $false) { Write-Output "FFOX-00-000005" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000006"
 # "Firefox must be configured to not automatically execute or download MIME types that are not authorized for auto-download."
 
-foreach ($possibleFirefoxUser in $validFirefoxUsers) {
-    $firefoxPath = "$($possibleFirefoxUser.FullName)\AppData\Roaming\Mozilla\Firefox"
-    if (Test-Path $firefoxPath) {
-        $profilePath = Get-ChildItem -Path "$firefoxPath\Profiles" -Directory | Where-Object { $_.Name -like "*.default-release" } | Select-Object -First 1 -ExpandProperty FullName
-        if ($profilePath) {
-            $firefoxHandlers = Get-Content "$profilePath\handlers.json"
-            break
-        }
-    }
-}
 $list = @("HTA", "JSE", "JS", "MOCHA", "SHS", "VBE", "VBS", "SCT", "WSC", "FDF", "XFDF", "LSL", "LSO", "LSS", "IQY", "RQY", "DOS", "BAT", "PS", "EPS", "WCH", "WCM", "WB1", "WB3", "WCH", "WCM", "AD")
 
 foreach ($item in $list) {
@@ -93,13 +93,13 @@ if ($firefoxPopUpBlocker.Enabled -ne "1") { Write-Output "FFOX-00-000009" }
 
 # "FFOX-00-000010"
 # "Firefox must be configured to prevent JavaScript from moving or resizing windows."
-if ($firefoxPreferences -notcontains 'user_pref("dom.disable_window_move_resize", true);') { Write-Output "FFOX-00-000010" }
+if ($firefoxPreferences.Contains('"dom.disable_window_move_resize", true') -eq $false -and $mozillaCfg.Contains('"dom.disable_window_move_resize", true') -eq $false) { Write-Output "FFOX-00-000010" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000011"
 # "Firefox must be configured to prevent JavaScript from raising or lowering windows."
-if ($firefoxPreferences -notcontains 'user_pref("dom.disable_window_flip", true);') { Write-Output "FFOX-00-000011" }
+if ($firefoxPreferences.Contains('"dom.disable_window_flip", true') -eq $false -and $mozillaCfg.Contains('"dom.disable_window_flip", true') -eq $false) { Write-Output "FFOX-00-000011" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -112,7 +112,7 @@ if ($firefoxAddonsPermissionsCheck -eq $null) { Write-Output "FFOX-00-000013" }
 
 # "FFOX-00-000014"
 # "Background submission of information to Mozilla must be disabled."
-if ($firefoxSettings.DisableTelemetry -ne "1" -or $firefoxPreferences -notcontains 'user_pref("toolkit.telemetry.rejected", true);') { Write-Output "FFOX-00-000014" }
+if ($firefoxSettings.DisableTelemetry -ne "1" -and $firefoxPreferences.Contains('"datareporting.policy.dataSubmissionEnabled", false') -eq $false -and $mozillaCfg.Contains('"datareporting.policy.dataSubmissionEnabled", false') -eq $false) { Write-Output "FFOX-00-000014" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -141,7 +141,7 @@ if ($firefoxSettings.DisablePrivateBrowsing -ne "1") { Write-Output "FFOX-00-000
 
 # "FFOX-00-000020"
 # "Firefox search suggestions must be disabled."
-if ($firefoxPreferences -notcontains 'user_pref("browser.search.suggest.enabled", false);') { Write-Output "FFOX-00-000020" }
+if ($firefoxPreferences.Contains('"browser.search.suggest.enabled", false') -eq $false -and $mozillaCfg.Contains('"browser.search.suggest.enabled", false') -eq $false) { Write-Output "FFOX-00-000020" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -173,13 +173,13 @@ if ($firefoxTrackingProtection.Cryptomining -ne "1") { Write-Output "FFOX-00-000
 
 # "FFOX-00-000025"
 # "Firefox Enhanced Tracking Protection must be enabled."
-if ($firefoxPreferences -notcontains 'user_pref("browser.contentblocking.category", "strict");') { Write-Output "FFOX-00-000025" }
+if ($firefoxPreferences.Contains('"browser.contentblocking.category", "strict"') -eq $false -and $mozillaCfg.Contains('"browser.contentblocking.category", "strict"') -eq $false) { Write-Output "FFOX-00-000025" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000026"
 # "Firefox extension recommendations must be disabled."
-if ($firefoxPreferences -notcontains 'user_pref("extensions.htmlaboutaddons.recommendations.enabled", false);') { Write-Output "FFOX-00-000026" }
+if ($firefoxPreferences.Contains('"extensions.htmlaboutaddons.recommendations.enabled", false') -eq $false -and $mozillaCfg.Contains('"extensions.htmlaboutaddons.recommendations.enabled", false') -eq $false) { Write-Output "FFOX-00-000026" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -216,3 +216,32 @@ if ($firefoxSettings.DisableFirefoxAccounts -ne "1") { Write-Output "FFOX-00-000
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "FFOX-00-000036"
+# "Firefox feedback reporting must be disabled."
+if ($firefoxSettings.DisableFeedbackCommands -ne "1") { Write-Output "FFOX-00-000036" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000037"
+# "Firefox encrypted media extensions must be disabled."
+if ($firefoxSettings.EncryptedMediaExtensions -ne "0") { Write-Output "FFOX-00-000037" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000017"
+# "Firefox must be configured to not delete data upon shutdown."
+if ($firefoxPreferences.Contains('"privacy.sanitize.sanitizeOnShutdown", true')) { Write-Output "FFOX-00-000017" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000038"
+# "Pocket must be disabled."
+if ($firefoxSettings.DisablePocket -ne "1") { Write-Output "FFOX-00-000038" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "FFOX-00-000039"
+# "Firefox Studies must be disabled."
+if ($firefoxSettings.DisableFirefoxStudies -ne "1") { Write-Output "FFOX-00-000039" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
