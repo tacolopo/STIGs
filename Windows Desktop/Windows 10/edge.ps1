@@ -317,3 +317,50 @@ if ($baseEdgeSettings.ConfigureShare -ne 1) { Write-Output "EDGE-00-000059" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "EDGE-00-000060"
+# "Guest mode must be disabled."
+if ($baseEdgeSettings.BrowserGuestModeEnabled -ne 0) { Write-Output "EDGE-00-000060" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000061"
+# "Relaunch notification must be required."
+if ($baseEdgeSettings.RelaunchNotification -ne 2) { Write-Output "EDGE-00-000061" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000062"
+# "The built-in DNS client must be disabled."
+if ($baseEdgeSettings.BuiltInDnsClientEnabled -ne 0) { Write-Output "EDGE-00-000062" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000063"
+# "Use of the QUIC protocol must be disabled."
+if ($baseEdgeSettings.QuicAllowed -ne 0) { Write-Output "EDGE-00-000063" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000064"
+# "The list of domains media autoplay allows must be allowlisted if used."
+# "This requirement for 'AutoplayAllowlist' is not required; this is optional."
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000065"
+# "Visual Search must be disabled."
+if ($baseEdgeSettings.VisualSearchEnabled -ne 0) { Write-Output "EDGE-00-000065" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000066"
+# "Copilot must be disabled."
+if ($baseEdgeSettings.HubsSidebarEnabled -ne 0) { Write-Output "EDGE-00-000066" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000067"
+# "Session only-based cookies must be enabled."
+if ($baseEdgeSettings.DefaultCookiesSetting -ne 4) { Write-Output "EDGE-00-000067" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
