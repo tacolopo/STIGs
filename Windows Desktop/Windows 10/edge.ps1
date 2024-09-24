@@ -171,5 +171,77 @@ if ($baseEdgeSettings.AutofillCreditCardEnabled -ne 0) { Write-Output "EDGE-00-0
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"EDGE-00-000029"
+# "EDGE-00-000029"
+# "Autofill for addresses must be disabled."
+if ($baseEdgeSettings.AutofillAddressEnabled -ne 0) { Write-Output "EDGE-00-000029" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000030"
+# "Online revocation checks must be performed."
+if ($baseEdgeSettings.EnableOnlineRevocationChecks -ne 1) { Write-Output "EDGE-00-000030" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000031"
+# "Personalization of ads, search, and news by sending browsing history to Microsoft must be disabled."
+if ($baseEdgeSettings.PersonalizationReportingEnabled -ne 0) { Write-Output "EDGE-00-000031" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000032"
+# "Site tracking of a user’s location must be disabled."
+if ($baseEdgeSettings.DefaultGeolocationSetting -ne 2) { Write-Output "EDGE-00-000032" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000033"
+# "Browser history must be saved."
+if ($baseEdgeSettings.AllowDeletingBrowserHistory -ne 0) { Write-Output "EDGE-00-000033" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000034"
+# "Edge development tools must be disabled."
+if ($baseEdgeSettings.DeveloperToolsAvailability -ne 2) { Write-Output "EDGE-00-000034" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000036"
+# "Download restrictions must be configured."
+if ($baseEdgeSettings.DownloadRestrictions -in @(0, 4)) { Write-Output "EDGE-00-000036" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000039"
+# "URLs must be allowlisted for plugin use if used."
+# "This requirement for 'Allow pop-up windows on specific sites' is not required; this is optional."
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000041"
+# "Extensions installation must be blocklisted by default."
+$edgeExtensionInstallBlocklist = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist\1
+if ($edgeExtensionInstallBlocklist -ne "REG_SZ = *") { Write-Output "EDGE-00-000041" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000042"
+# "Extensions that are approved for use must be allowlisted if used."
+# "This requirement for 'Allow specific extensions to be installed' is not required; this is optional."
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000043"
+# "The Password Manager must be disabled."
+if ($baseEdgeSettings.PasswordManagerEnabled -ne 0) { Write-Output "EDGE-00-000043" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000045"
+# "The version of Microsoft Edge running on the system must be a supported version."
+$edgeVersionCheck = (Get-AppxPackage -Name "Microsoft.MicrosoftEdge.Stable").Version
+if ($edgeVersionCheck -lt "127") { Write-Output "EDGE-00-000045" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
