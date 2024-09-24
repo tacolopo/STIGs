@@ -93,3 +93,83 @@ if ($baseEdgeSettings.ImportCookies -ne 0) { Write-Output "EDGE-00-000015" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "EDGE-00-000016"
+# "Importing of extensions must be disabled."
+if ($baseEdgeSettings.ImportExtensions -ne 0) { Write-Output "EDGE-00-000016" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000017"
+# "Importing of browsing history must be disabled."
+if ($baseEdgeSettings.ImportHistory -ne 0) { Write-Output "EDGE-00-000017" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000018"
+# "Importing of home page settings must be disabled."
+if ($baseEdgeSettings.ImportHomepage -ne 0) { Write-Output "EDGE-00-000018" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000019"
+# "Importing of open tabs must be disabled."
+if ($baseEdgeSettings.ImportOpenTabs -ne 0) { Write-Output "EDGE-00-000019" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000020"
+# "Importing of payment info must be disabled."
+if ($baseEdgeSettings.ImportPaymentInfo -ne 0) { Write-Output "EDGE-00-000020" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000021"
+# "Importing of saved passwords must be disabled."
+if ($baseEdgeSettings.ImportSavedPasswords -ne 0) { Write-Output "EDGE-00-000021" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000022"
+# "Importing of search engine settings must be disabled."
+if ($baseEdgeSettings.ImportSearchEngine -ne 0) { Write-Output "EDGE-00-000022" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000023"
+# "Importing of shortcuts must be disabled."
+if ($baseEdgeSettings.ImportShortcuts -ne 0) { Write-Output "EDGE-00-000023" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000024"
+# "Autoplay must be disabled."
+if ($baseEdgeSettings.AutoplayAllowed -ne 0) { Write-Output "EDGE-00-000024" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000025"
+# "WebUSB must be disabled."
+if ($baseEdgeSettings.DefaultWebUsbGuardSetting -ne 2) { Write-Output "EDGE-00-000025" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000026"
+# "Google Cast must be disabled."
+if ($baseEdgeSettings.EnableMediaRouter -ne 0) { Write-Output "EDGE-00-000026" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000027"
+# "Web Bluetooth API must be disabled."
+if ($baseEdgeSettings.DefaultWebBluetoothGuardSetting -ne 2) { Write-Output "EDGE-00-000027" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000028"
+# "Autofill for Credit Cards must be disabled."
+if ($baseEdgeSettings.AutofillCreditCardEnabled -ne 0) { Write-Output "EDGE-00-000028" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"EDGE-00-000029"
+
