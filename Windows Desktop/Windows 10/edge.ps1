@@ -222,7 +222,7 @@ if ($baseEdgeSettings.DownloadRestrictions -in @(0, 4)) { Write-Output "EDGE-00-
 # "EDGE-00-000041"
 # "Extensions installation must be blocklisted by default."
 $edgeExtensionInstallBlocklist = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist\1
-if ($edgeExtensionInstallBlocklist -ne "REG_SZ = *") { Write-Output "EDGE-00-000041" }
+if ($edgeExtensionInstallBlocklist -ne "*") { Write-Output "EDGE-00-000041" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -242,6 +242,78 @@ if ($baseEdgeSettings.PasswordManagerEnabled -ne 0) { Write-Output "EDGE-00-0000
 # "The version of Microsoft Edge running on the system must be a supported version."
 $edgeVersionCheck = (Get-AppxPackage -Name "Microsoft.MicrosoftEdge.Stable").Version
 if ($edgeVersionCheck -lt "127") { Write-Output "EDGE-00-000045" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000046"
+# "Edge must be configured to allow only TLS."
+if ($baseEdgeSettings.SSLVersionMin -ne "tls1.2") { Write-Output "EDGE-00-000046" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000047"
+# "Site isolation for every site must be enabled."
+if ($baseEdgeSettings.SitePerProcess -ne 1) { Write-Output "EDGE-00-000047" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000048"
+# "Supported authentication schemes must be configured."
+if ($baseEdgeSettings.AuthSchemes -ne "ntlm,negotiate") { Write-Output "EDGE-00-000048" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000050"
+# "Microsoft Defender SmartScreen must be enabled."
+if ($baseEdgeSettings.SmartScreenEnabled -ne 1) { Write-Output "EDGE-00-000050" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000051"
+# "Microsoft Defender SmartScreen must be configured to block potentially unwanted apps."
+if ($baseEdgeSettings.SmartScreenPuaEnabled -ne 1) { Write-Output "EDGE-00-000051" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000052"
+# "The download location prompt must be configured."
+if ($baseEdgeSettings.PromptForDownloadLocation -ne 1) { Write-Output "EDGE-00-000052" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000054"
+# "Tracking of browsing activity must be disabled."
+if ($baseEdgeSettings.TrackingPrevention -notin @(2, 3)) { Write-Output "EDGE-00-000054" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000055"
+# "A website's ability to query for payment methods must be disabled."
+if ($baseEdgeSettings.PaymentMethodQueryEnabled -ne 0) { Write-Output "EDGE-00-000055" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000056"
+# "Suggestions of similar web pages in the event of a navigation error must be disabled."
+if ($baseEdgeSettings.AlternateErrorPagesEnabled -ne 0) { Write-Output "EDGE-00-000056" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000057"
+# "User feedback must be disabled."
+if ($baseEdgeSettings.UserFeedbackAllowed -ne 0) { Write-Output "EDGE-00-000057" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000058"
+# "The collections feature must be disabled."
+if ($baseEdgeSettings.EdgeCollectionsEnabled -ne 0) { Write-Output "EDGE-00-000058" }
+
+"----------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+# "EDGE-00-000059"
+# "The Share Experience feature must be disabled."
+if ($baseEdgeSettings.ConfigureShare -ne 1) { Write-Output "EDGE-00-000059" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
