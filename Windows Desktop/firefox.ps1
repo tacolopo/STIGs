@@ -69,7 +69,7 @@ foreach ($mimeType in $handlersJson.mimeTypes.PSObject.Properties) {
     
     foreach ($extension in $extensions) {
         if ($notAllowedMIMEList -contains $extension) {
-            if ($action -eq 0 -or $action -eq 2) {
+            if ($action -eq 2 -or $action -eq 4) {
                 $violationFound = $true
                 break 2
             }
