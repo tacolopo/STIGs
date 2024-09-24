@@ -14,12 +14,11 @@ foreach ($possibleFirefoxUser in $validFirefoxUsers) {
         $profilePath = Get-ChildItem -Path "$firefoxPath\Profiles" -Directory | Where-Object { $_.Name -like "*.default-release" } | Select-Object -First 1 -ExpandProperty FullName
         if ($profilePath) {
             $firefoxPreferences = Get-Content "$profilePath\prefs.js" | Out-String
+            $firefoxHandlers = Get-Content "$profilePath\handlers.json" | Out-String
             break
         }
     }
 }
-
-$firefoxHandlers = Get-Content "$profilePath\handlers.json" | Out-String
 
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
