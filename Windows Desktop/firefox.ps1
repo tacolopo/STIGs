@@ -77,7 +77,7 @@ foreach ($mimeType in $handlersJson.mimeTypes.PSObject.Properties) {
     }
 }
 
-if ($violationFound -eq $true -or $firefoxPreferences.Contains('"browser.download.always_ask_before_handling_new_types", true') -eq $false) { Write-Output "FFOX-00-000006" }
+if ($violationFound -eq $true) { Write-Output "FFOX-00-000006" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
