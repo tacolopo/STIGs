@@ -7,6 +7,7 @@
 #define some commonly used variables
 $mozillaCfg = Get-Content "C:\Program Files\Mozilla Firefox\mozilla.cfg" | Out-String
 $firefoxSettings = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\
+
 $validFirefoxUsers = Get-ChildItem C:\Users | Where-Object { $_.PSIsContainer }
 foreach ($possibleFirefoxUser in $validFirefoxUsers) {
     $firefoxPath = "$($possibleFirefoxUser.FullName)\AppData\Roaming\Mozilla\Firefox"
@@ -38,7 +39,6 @@ if ($firefoxSettings.SSLVersionMin -notin @("tls1.2", "tls1.3") -and $mozillaCfg
 
 # "FFOX-00-000003"
 # "Firefox must be configured to ask which certificate to present to a website when a certificate is required."
-
 if ($firefoxPreferences.Contains('"security.default_personal_cert", "Ask Every Time"') -eq $false -and $mozillaCfg.Contains('"security.default_personal_cert", "Ask Every Time"') -eq $false) { Write-Output "FFOX-00-000003" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -58,14 +58,26 @@ if ($firefoxSettings.ExtensionUpdate -ne "0" -and $mozillaCfg.Contains('"extensi
 # "FFOX-00-000006"
 # "Firefox must be configured to not automatically execute or download MIME types that are not authorized for auto-download."
 
-$list = @("HTA", "JSE", "JS", "MOCHA", "SHS", "VBE", "VBS", "SCT", "WSC", "FDF", "XFDF", "LSL", "LSO", "LSS", "IQY", "RQY", "DOS", "BAT", "PS", "EPS", "WCH", "WCM", "WB1", "WB3", "WCH", "WCM", "AD")
+$notAllowedMIMEList = @("HTA", "JSE", "JS", "MOCHA", "SHS", "VBE", "VBS", "SCT", "WSC", "FDF", "XFDF", "LSL", "LSO", "LSS", "IQY", "RQY", "DOS", "BAT", "PS", "EPS", "WCH", "WCM", "WB1", "WB3", "WCH", "WCM", "AD")
 
-foreach ($item in $list) {
-    if ($firefoxHandlers.Contains($item)) {
-        Write-Output "FFOX-00-000006"
-        break
+$violationFound = $false
+$handlersJson = Get-Content "$profilePath\handlers.json" | ConvertFrom-Json
+
+foreach ($mimeType in $handlersJson.mimeTypes.PSObject.Properties) {
+    $extensions = $mimeType.Value.extensions
+    $action = $mimeType.Value.action
+    
+    foreach ($extension in $extensions) {
+        if ($notAllowedMIMEList -contains $extension) {
+            if ($action -eq 0 -or $action -eq 2) {
+                $violationFound = $true
+                break 2
+            }
+        }
     }
 }
+
+if ($violationFound -eq $true) { Write-Output "FFOX-00-000006" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
