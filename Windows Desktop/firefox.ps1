@@ -6,7 +6,7 @@
 
 #define some commonly used variables
 $mozillaCfg = Get-Content "C:\Program Files\Mozilla Firefox\mozilla.cfg" | Out-String
-
+$firefoxSettings = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\
 $validFirefoxUsers = Get-ChildItem C:\Users | Where-Object { $_.PSIsContainer }
 foreach ($possibleFirefoxUser in $validFirefoxUsers) {
     $firefoxPath = "$($possibleFirefoxUser.FullName)\AppData\Roaming\Mozilla\Firefox"
@@ -32,8 +32,7 @@ if ($firefoxVersion.Contains("130.0") -eq $false) { Write-Output "FFOX-00-000001
 
 # "FFOX-00-000002"
 # "Firefox must be configured to allow only TLS 1.2 or above."
-$firefoxSettings = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\
-if ($firefoxSettings.SSLVersionMin -ne "tls1.2" -and $mozillaCfg.Contains('"security.tls.version.min", 3') -eq $false -and $mozillaCfg.Contains('"security.tls.version.min", 4') -eq $false) { Write-Output "FFOX-00-000002" }
+if ($firefoxSettings.SSLVersionMin -notin @("tls1.2", "tls1.3") -and $mozillaCfg.Contains('"security.tls.version.min", 3') -eq $false -and $mozillaCfg.Contains('"security.tls.version.min", 4') -eq $false) { Write-Output "FFOX-00-000002" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
