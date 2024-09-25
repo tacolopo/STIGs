@@ -155,13 +155,11 @@ if ($firefoxSettings.SearchSuggestEnabled -ne "0" -and $firefoxPreferences.Conta
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"FFOX-00-000021"
-"Firefox autoplay must be disabled."
-
-"Add media.autoplay.default preference"
+# "FFOX-00-000021"
+# "Firefox autoplay must be disabled."
 
 $firefoxAutoplayPermissions = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Mozilla\Firefox\Permissions\Autoplay
-if ($firefoxAutoplayPermissions.Default -ne "block-audio-video") { Write-Output "FFOX-00-000021" }
+if ($firefoxAutoplayPermissions.Default -ne "block-audio-video" -and $firefoxPreferences.Contains('"media.autoplay.default", "block-audio-video"') -eq $false -and $mozillaCfg.Contains('"media.autoplay.default", "block-audio-video"') -eq $false) { Write-Output "FFOX-00-000021" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
