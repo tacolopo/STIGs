@@ -223,7 +223,7 @@ if (($firefoxHomePageSettings.TopSites -ne "0" -or $firefoxPreferences.Contains(
 
 # "FFOX-00-000034"
 # "Firefox accounts must be disabled."
-if ($firefoxSettings.DisableFirefoxAccounts -ne "1") { Write-Output "FFOX-00-000034" }
+if ($firefoxSettings.DisableFirefoxAccounts -ne "1" -and $firefoxPreferences.Contains('"identity.fxaccounts.enabled", false') -eq $false -and $mozillaCfg.Contains('"identity.fxaccounts.enabled", false') -eq $false) { Write-Output "FFOX-00-000034" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -235,24 +235,24 @@ if ($firefoxSettings.DisableFeedbackCommands -ne "1") { Write-Output "FFOX-00-00
 
 # "FFOX-00-000037"
 # "Firefox encrypted media extensions must be disabled."
-if ($firefoxSettings.EncryptedMediaExtensions -ne "0" -and $mozillaCfg.Contains('"media.eme.enabled", false') -eq $false) { Write-Output "FFOX-00-000037" }
+if ($firefoxSettings.EncryptedMediaExtensions -ne "0" -and $firefoxPreferences.Contains('"media.eme.enabled", false') -eq $false -and $mozillaCfg.Contains('"media.eme.enabled", false') -eq $false) { Write-Output "FFOX-00-000037" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000017"
 # "Firefox must be configured to not delete data upon shutdown."
-if ($firefoxPreferences.Contains('"privacy.sanitize.sanitizeOnShutdown", true')) { Write-Output "FFOX-00-000017" }
+if ($firefoxPreferences.Contains('"privacy.sanitize.sanitizeOnShutdown", true') -or $mozillaCfg.Contains('"privacy.sanitize.sanitizeOnShutdown", true')) { Write-Output "FFOX-00-000017" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000038"
 # "Pocket must be disabled."
-if ($firefoxSettings.DisablePocket -ne "1") { Write-Output "FFOX-00-000038" }
+if ($firefoxSettings.DisablePocket -ne "1" -and $firefoxPreferences.Contains('"extensions.pocket.enabled", false') -eq $false -and $mozillaCfg.Contains('"extensions.pocket.enabled", false') -eq $false) { Write-Output "FFOX-00-000038" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000039"
 # "Firefox Studies must be disabled."
-if ($firefoxSettings.DisableFirefoxStudies -ne "1") { Write-Output "FFOX-00-000039" }
+if ($firefoxSettings.DisableFirefoxStudies -ne "1" -and $firefoxPreferences.Contains('"app.shield.optoutstudies.enabled", false') -eq $false -and $mozillaCfg.Contains('"app.shield.optoutstudies.enabled", false') -eq $false) { Write-Output "FFOX-00-000039" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
