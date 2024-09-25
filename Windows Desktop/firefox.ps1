@@ -113,10 +113,10 @@ if ($firefoxPreferences.Contains('"dom.disable_window_flip", true') -eq $false -
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-"FFOX-00-000013"
-"Firefox must be configured to disable the installation of extensions."
+# "FFOX-00-000013"
+# "Firefox must be configured to disable the installation of extensions."
 $firefoxAddonsPermissionsCheck = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\InstallAddonsPermission
-if ($firefoxAddonsPermissionsCheck -eq $null) { Write-Output "FFOX-00-000013" }
+if ($firefoxAddonsPermissionsCheck.Default -ne 0 -and $firefoxPreferences.Contains('"xpinstall.enabled", false') -eq $false -and $mozillaCfg.Contains('"xpinstall.enabled", false') -eq $false) { Write-Output "FFOX-00-000013" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
