@@ -83,13 +83,13 @@ if ($violationFound -eq $true) { Write-Output "FFOX-00-000006" }
 
 # "FFOX-00-000007"
 # "Firefox must be configured to disable form fill assistance."
-if ($firefoxSettings.DisableFormHistory -ne "1") { Write-Output "FFOX-00-000007" }
+if ($firefoxSettings.DisableFormHistory -ne "1" -and $firefoxPreferences.Contains('"browser.formfill.enable", false') -eq $false -and $mozillaCfg.Contains('"browser.formfill.enable", false') -eq $false) { Write-Output "FFOX-00-000007" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000008"
 # "Firefox must be configured to not use a password store with or without a master password."
-if ($firefoxSettings.PasswordManagerEnabled -ne "0") { Write-Output "FFOX-00-000008" }
+if ($firefoxSettings.PasswordManagerEnabled -ne "0" -and $firefoxPreferences.Contains('"signon.rememberSignons", false') -eq $false -and $mozillaCfg.Contains('"signon.rememberSignons", false') -eq $false) { Write-Output "FFOX-00-000008" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
