@@ -221,8 +221,8 @@ if ($baseEdgeSettings.DownloadRestrictions -in @(0, 4)) { Write-Output "EDGE-00-
 
 # "EDGE-00-000041"
 # "Extensions installation must be blocklisted by default."
-$edgeExtensionInstallBlocklist = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist\1
-if ($edgeExtensionInstallBlocklist -ne "*") { Write-Output "EDGE-00-000041" }
+$edgeExtensionInstallBlocklist = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist\
+if ($edgeExtensionInstallBlocklist.1 -ne "*") { Write-Output "EDGE-00-000041" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
