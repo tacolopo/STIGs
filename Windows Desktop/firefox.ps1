@@ -174,13 +174,13 @@ if ($firefoxSettings.NetworkPrediction -ne "0" -and $firefoxPreferences.Contains
 # "FFOX-00-000023"
 # "Firefox fingerprinting protection must be enabled."
 $firefoxTrackingProtection = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\EnableTrackingProtection
-if ($firefoxTrackingProtection.Fingerprinting -ne "1") { Write-Output "FFOX-00-000023" }
+if ($firefoxTrackingProtection.Fingerprinting -ne "1" -and $firefoxPreferences.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -eq $false -and $mozillaCfg.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -eq $false) { Write-Output "FFOX-00-000023" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000024"
 # "Firefox cryptomining protection must be enabled."
-if ($firefoxTrackingProtection.Cryptomining -ne "1") { Write-Output "FFOX-00-000024" }
+if ($firefoxTrackingProtection.Cryptomining -ne "1" -and $firefoxPreferences.Contains('"privacy.trackingprotection.cryptomining.enabled", true') -eq $false -and $mozillaCfg.Contains('"privacy.trackingprotection.cryptomining.enabled", true') -eq $false) { Write-Output "FFOX-00-000024" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
