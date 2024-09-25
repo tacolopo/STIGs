@@ -197,7 +197,7 @@ if ($firefoxPreferences.Contains('"extensions.htmlaboutaddons.recommendations.en
 # "FFOX-00-000027"
 # "Firefox deprecated ciphers must be disabled."
 $disabledFirefoxCiphers = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Mozilla\Firefox\DisabledCiphers
-if ($disabledFirefoxCiphers.TLS_RSA_WITH_3DES_EDE_CBC_SHA -notin @("1", "true")) { Write-Output "FFOX-00-000027" }
+if ($disabledFirefoxCiphers.TLS_RSA_WITH_3DES_EDE_CBC_SHA -notin @("0", "false") -and $firefoxPreferences.Contains('"security.ssl3.deprecated.rsa_des_ede3_sha", false') -eq $false -and $mozillaCfg.Contains('"security.ssl3.deprecated.rsa_des_ede3_sha", false') -eq $false) { Write-Output "FFOX-00-000027" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
