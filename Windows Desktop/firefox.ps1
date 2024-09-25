@@ -204,7 +204,7 @@ if ($disabledFirefoxCiphers.TLS_RSA_WITH_3DES_EDE_CBC_SHA -notin @("0", "false")
 # "FFOX-00-000028"
 # "Firefox must not recommend extensions as the user is using the browser."
 $firefoxUserMessaging = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\UserMessaging
-if ($firefoxSettings.ExtensionRecommendations -ne "0" -or $firefoxUserMessaging.ExtensionRecommendations -ne "0") { Write-Output "FFOX-00-000028" }
+if ($firefoxUserMessaging.ExtensionRecommendations -ne "0" -and $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false') -eq $false) { Write-Output "FFOX-00-000028" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
