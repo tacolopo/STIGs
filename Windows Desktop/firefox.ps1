@@ -113,8 +113,8 @@ if ($firefoxPreferences.Contains('"dom.disable_window_flip", true') -eq $false -
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# "FFOX-00-000013"
-# "Firefox must be configured to disable the installation of extensions."
+"FFOX-00-000013"
+"Firefox must be configured to disable the installation of extensions."
 $firefoxAddonsPermissionsCheck = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\InstallAddonsPermission
 if ($firefoxAddonsPermissionsCheck -eq $null) { Write-Output "FFOX-00-000013" }
 
@@ -128,7 +128,7 @@ if ($firefoxSettings.DisableTelemetry -ne "1" -and $firefoxPreferences.Contains(
 
 # "FFOX-00-000015"
 # "Firefox development tools must be disabled."
-if ($firefoxSettings.DisableDeveloperTools -ne "1") { Write-Output "FFOX-00-000015" }
+if ($firefoxSettings.DisableDeveloperTools -ne "1" -and $firefoxPreferences.Contains('"devtools.policy.disabled", true') -eq $false -and $mozillaCfg.Contains('"devtools.policy.disabled", true') -eq $false) { Write-Output "FFOX-00-000015" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -151,12 +151,15 @@ if ($firefoxSettings.DisablePrivateBrowsing -ne "1") { Write-Output "FFOX-00-000
 
 # "FFOX-00-000020"
 # "Firefox search suggestions must be disabled."
-if ($firefoxPreferences.Contains('"browser.search.suggest.enabled", false') -eq $false -and $mozillaCfg.Contains('"browser.search.suggest.enabled", false') -eq $false) { Write-Output "FFOX-00-000020" }
+if ($firefoxSettings.SearchSuggestEnabled -ne "0" -and $firefoxPreferences.Contains('"browser.search.suggest.enabled", false') -eq $false -and $mozillaCfg.Contains('"browser.search.suggest.enabled", false') -eq $false) { Write-Output "FFOX-00-000020" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
-# "FFOX-00-000021"
-# "Firefox autoplay must be disabled."
+"FFOX-00-000021"
+"Firefox autoplay must be disabled."
+
+"Add media.autoplay.default preference"
+
 $firefoxAutoplayPermissions = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Mozilla\Firefox\Permissions\Autoplay
 if ($firefoxAutoplayPermissions.Default -ne "block-audio-video") { Write-Output "FFOX-00-000021" }
 
@@ -164,7 +167,7 @@ if ($firefoxAutoplayPermissions.Default -ne "block-audio-video") { Write-Output 
 
 # "FFOX-00-000022"
 # "Firefox network prediction must be disabled."
-if ($firefoxSettings.NetworkPrediction -ne "0") { Write-Output "FFOX-00-000022" }
+if ($firefoxSettings.NetworkPrediction -ne "0" -and $firefoxPreferences.Contains('"network.dns.disablePrefetch", true') -eq $false -and $mozillaCfg.Contains('"network.dns.disablePrefetch", true') -eq $false) { Write-Output "FFOX-00-000022" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
