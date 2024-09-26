@@ -381,7 +381,9 @@ Get-ADGroup -Filter * -Property SID | Select-Object -Property Name, SID
 # "WN10-00-000210, WN10-00-000220, WN10-00-000230"
 # "Bluetooth must be turned off"
 $bluetoothStatus = Get-NetAdapter Where-Object { $_.Name -like "*Bluetooth*" } | Out-String
-if ($bluetoothStatus -ne $null -and $bluetoothStatus.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000210, WN10-00-000220, WN10-00-000230" }
+if ($bluetoothStatus -ne $null) {
+    if ($bluetoothStatus.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000210, WN10-00-000220, WN10-00-000230" }
+}
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1135,7 +1137,7 @@ if ($terminalServicesCheck.MinEncryptionLevel -ne 3) { Write-Output "WN10-CC-000
 
 # "WN10-CC-000295"
 # "Attachments must be prevented from being downloaded from RSS feeds."
-$internetExplorerFeeds = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds\
+$internetExplorerFeeds = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Internet` Explorer\Feeds\
 if ($internetExplorerFeeds.DisableEnclosureDownload -ne 1) { Write-Output "WN10-CC-000295" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -1232,8 +1234,12 @@ if ($winrmClientCheck.AllowDigest -ne 0) { Write-Output "WN10-CC-000360" }
 
 # "WN10-CC-000365"
 # "Windows 10 must be configured to prevent Windows apps from being activated by voice while the system is locked."
-$appPrivacySettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy\
-if ($appPrivacySettings.LetAppsActivateWithVoiceAboveLock -ne 2 -and $appPrivacySettings.LetAppsActivateWithVoice -ne 2) { Write-Output "WN10-CC-000365" }
+$appPrivacySettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy\ -ErrorAction SilentlyContinue
+if ($appPrivacySettings -ne $null) {
+    if ($appPrivacySettings.LetAppsActivateWithVoiceAboveLock -ne 2 -and $appPrivacySettings.LetAppsActivateWithVoice -ne 2) { Write-Output "WN10-CC-000365" }
+} else {
+    Write-Output "WN10-CC-000365"
+}
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1245,22 +1251,34 @@ if ($windowsSystemChecks.AllowDomainPINLogon -ne 0) { Write-Output "WN10-CC-0003
 
 # "WN10-CC-000385"
 # "Windows Ink Workspace must be configured to disallow access above the lock."
-$windowsInkWorkspace = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace\
-if ($windowsInkWorkspace.AllowWindowsInkWorkspace -ne 1) { Write-Output "WN10-CC-000385" }
+$windowsInkWorkspace = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace\ -ErrorAction SilentlyContinue
+if ($windowsInkWorkspace -ne $null) {
+    if ($windowsInkWorkspace.AllowWindowsInkWorkspace -ne 1) { Write-Output "WN10-CC-000385" }
+} else {
+    Write-Output "WN10-CC-000385"
+}
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-CC-000390"
 # "Windows 10 should be configured to prevent users from receiving suggestions for third-party or additional applications."
-$hkcuCloudContentSettingsCheck = Get-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\CloudContent\
-if ($hkcuCloudContentSettingsCheck.DisableThirdPartySuggestions -ne 1) { Write-Output "WN10-CC-000390" }
+$hkcuCloudContentSettingsCheck = Get-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\CloudContent\ -ErrorAction SilentlyContinue
+if ($hkcuCloudContentSettingsCheck -ne $null) {
+    if ($hkcuCloudContentSettingsCheck.DisableThirdPartySuggestions -ne 1) { Write-Output "WN10-CC-000390" }
+} else {
+    Write-Output "WN10-CC-000390"
+}
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-EP-000310"
 # "Windows 10 Kernel (Direct Memory Access) DMA Protection must be enabled."
-$kernelDmaProtection = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Kernel` DMA` Protection\
-if ($kernelDmaProtection.DeviceEnumerationPolicy -ne 0) { Write-Output "WN10-EP-000310" }
+$kernelDmaProtection = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Kernel` DMA` Protection\ -ErrorAction SilentlyContinue
+if ($kernelDmaProtection -ne $null) {
+    if ($kernelDmaProtection.DeviceEnumerationPolicy -ne 0) { Write-Output "WN10-EP-000310" }
+} else {
+    Write-Output "WN10-EP-000310"
+}
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1569,15 +1587,21 @@ if ($adminAccountLastPasswordSet) {
 
 # "WN10-UC-000015"
 # "Toast notifications to the lock screen must be turned off."
-$pushNotifications = Get-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications\
-if ($pushNotifications.NoToastApplicationNotificationOnLockScreen -ne 1) { Write-Output "WN10-UC-000015" }
+$pushNotifications = Get-ItemProperty -Path HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications\ -ErrorAction SilentlyContinue
+if ($pushNotifications -ne $null) {
+    if ($pushNotifications.NoToastApplicationNotificationOnLockScreen -ne 1) { Write-Output "WN10-UC-000015" }
+} else {
+    Write-Output "WN10-UC-000015"
+}
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-UC-000020"
 # "Zone information must be preserved when saving attachments."
-$attachmentsPolicies = Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments\
-if ($attachmentsPolicies.SaveZoneInformation -notin @(2, $null)) { Write-Output "WN10-UC-000020" }
+$attachmentsPolicies = Get-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments\ -ErrorAction SilentlyContinue
+if ($attachmentsPolicies.SaveZoneInformation -ne $null) {
+    if ($attachmentsPolicies.SaveZoneInformation -ne 2) { Write-Output "WN10-UC-000020" }
+}
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1843,8 +1867,12 @@ if ($hardenedPaths."\\*\SYSVOL" -ne 'RequireMutualAuthentication=1,RequireIntegr
 
 # "WN10-CC-000327"
 # "PowerShell Transcription must be enabled on Windows 10."
-$psTranscriptionCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription\
-if ($psTranscriptionCheck.EnableTranscripting -ne 1) { Write-Output "WN10-CC-000327" }
+$psTranscriptionCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription\ -ErrorAction SilentlyContinue
+if ($psTranscriptionCheck -ne $null) {
+    if ($psTranscriptionCheck.EnableTranscripting -ne 1) { Write-Output "WN10-CC-000327" }
+} else {
+    Write-Output "WN10-CC-000327"
+}
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
