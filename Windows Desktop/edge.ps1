@@ -6,16 +6,23 @@
 # "User control of proxy settings must be disabled."
 $baseEdgeSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\
 $edgeProxySettings = $baseEdgeSettings.ProxySettings | Out-String
-$acceptableValues = @('direct', 'system', 'auto_detect', 'fixed_servers', 'pac_script')
-if (-not ($acceptableValues | Where-Object { $edgeProxySettings.Contains($_) })) {
-    Write-Output "EDGE-00-000001"
+if ($edgeProxySettings.Contains("ProxyMode")) {
+    $acceptableValues = @('direct', 'system', 'auto_detect', 'fixed_servers', 'pac_script')
+    if (-not ($acceptableValues | Where-Object { $edgeProxySettings.Contains($_) })) {
+        Write-Output "EDGE-00-000001"
+    }
+} else {
+    $acceptableValues = @("ProxyPacUrl", "ProxyServer", "ProxyBypassList")
+    if (-not ($acceptableValues | Where-Object { $edgeProxySettings.Contains($_) })) {
+        Write-Output "EDGE-00-000001"
+    }
 }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "EDGE-00-000002"
 # "Bypassing Microsoft Defender SmartScreen prompts for sites must be disabled."
-if ($baseEdgeSettings.PreventSmartScreenOverride -ne 1) { Write-Output "EDGE-00-000002" }
+if ($baseEdgeSettings.PreventSmartScreenPromptOverride -ne 1) { Write-Output "EDGE-00-000002" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
