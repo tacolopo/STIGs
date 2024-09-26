@@ -273,16 +273,23 @@ if ($smbv1ClientCheck.Start -ne 4 -and $smbv1Check.Contains('Enabled') -eq $true
 $userSIDs = @()
 $groupSIDs = @()
 $exportPath = "$env:TEMP\secpol.inf"
-secedit /export /cfg $exportPath
+secedit /export /cfg $exportPath > $null
 $policyContent = Get-Content $exportPath
 $sidLines = $policyContent | Select-String "Se"
 $unresolvedSids = $sidLines | Where-Object { $_ -match 'S-1-' }
 
-Import-Module ActiveDirectory
+foreach ($sid in $unresolvedSids) {
+    if ($userSIDs -notcontains $sid -and $groupSIDs -notcontains $sid) {
+        Write-Output "WN10-00-000190"
+        break
+    }
+}
+
+# Import-Module ActiveDirectory
 
 # Get all AD users and groups and their SIDs
-Get-ADUser -Filter * -Property SID | Select-Object -Property Name, SID
-Get-ADGroup -Filter * -Property SID | Select-Object -Property Name, SID
+# Get-ADUser -Filter * -Property SID | Select-Object -Property Name, SID
+# Get-ADGroup -Filter * -Property SID | Select-Object -Property Name, SID
 
 
 
@@ -380,7 +387,7 @@ Get-ADGroup -Filter * -Property SID | Select-Object -Property Name, SID
 
 # "WN10-00-000210, WN10-00-000220, WN10-00-000230"
 # "Bluetooth must be turned off"
-$bluetoothStatus = Get-NetAdapter Where-Object { $_.Name -like "*Bluetooth*" } | Out-String
+$bluetoothStatus = Get-NetAdapter | Where-Object { $_.Name -like "*Bluetooth*" } | Out-String
 if ($bluetoothStatus -ne $null) {
     if ($bluetoothStatus.Contains('Enabled') -eq $true) { Write-Output "WN10-00-000210, WN10-00-000220, WN10-00-000230" }
 }
@@ -917,7 +924,7 @@ if ($certificateDeviceAuthCheck.DevicePKInitEnabled -eq 0) { Write-Output "WN10-
 # "WN10-CC-000120"
 # "The network selection user interface (UI) must not be displayed on the logon screen."
 $windowsSystemChecks = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\System\
-# if ($windowsSystemChecks.DontDisplayNetworkSelectionUI -ne 1) { Write-Output "WN10-CC-000120" }
+if ($windowsSystemChecks.DontDisplayNetworkSelectionUI -ne 1) { Write-Output "WN10-CC-000120" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1294,13 +1301,13 @@ if ($kernelDmaProtection -ne $null) {
 # "Default permissions for the HKEY_LOCAL_MACHINE registry hive must be maintained."
 
 $hklmSoftwareACL = Get-Acl -Path HKLM:SOFTWARE | % { $_.access }
-$softwareIsInherited = $hklmSoftwareACL.IsInherited
-$softwareFullControlAdmin = $hklmSoftwareACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Administrators" }
-$softwareReadkeyUsers = $hklmSoftwareACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Users" }
+$softwareIsInherited = $hklmSoftwareACL.IsInherited | Out-String
+$softwareFullControlAdmin = $hklmSoftwareACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Administrators" } | Out-String
+$softwareReadkeyUsers = $hklmSoftwareACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Users" } | Out-String
 $hklmSystemACL = Get-Acl -Path HKLM:SYSTEM | % { $_.access }
-$systemIsInherited = $hklmSystemACL.IsInherited
-$systemFullControlAdmin = $hklmSystemACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Administrators" }
-$systemReadkeyUsers = $hklmSystemACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Users" }
+$systemIsInherited = $hklmSystemACL.IsInherited | Out-String
+$systemFullControlAdmin = $hklmSystemACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Administrators" } | Out-String
+$systemReadkeyUsers = $hklmSystemACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Users" } | Out-String
 
 if ($softwareReadkeyUsers.Contains("ReadKey") -or $systemReadkeyUsers.Contains("ReadKey") -eq $false) { Write-Output "WN10-RG-000005" }
 if ($softwareIsInherited.Contains("True") -or $systemIsInherited.Contains("True") -eq $true) { Write-Output "WN10-RG-000005" }
