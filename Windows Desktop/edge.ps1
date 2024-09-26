@@ -4,7 +4,7 @@
 
 # "EDGE-00-000001"
 # "User control of proxy settings must be disabled."
-$baseEdgeSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\
+$baseEdgeSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\ -ErrorAction SilentlyContinue
 $edgeProxySettings = $baseEdgeSettings.ProxySettings | Out-String
 if ($edgeProxySettings.Contains("ProxyMode")) {
     $acceptableValues = @('direct', 'system', 'auto_detect', 'fixed_servers', 'pac_script')
@@ -228,7 +228,7 @@ if ($baseEdgeSettings.DownloadRestrictions -in @(0, 4)) { Write-Output "EDGE-00-
 
 # "EDGE-00-000041"
 # "Extensions installation must be blocklisted by default."
-$edgeExtensionInstallBlocklist = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist\
+$edgeExtensionInstallBlocklist = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist\ -ErrorAction SilentlyContinue
 if ($edgeExtensionInstallBlocklist.1 -ne "*") { Write-Output "EDGE-00-000041" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
