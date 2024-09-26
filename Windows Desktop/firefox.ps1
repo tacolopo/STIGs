@@ -6,7 +6,7 @@
 
 #define some commonly used variables
 $mozillaCfg = Get-Content "C:\Program Files\Mozilla Firefox\mozilla.cfg" | Out-String
-$firefoxSettings = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\
+$firefoxSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Mozilla\Firefox\
 
 $validFirefoxUsers = Get-ChildItem C:\Users | Where-Object { $_.PSIsContainer }
 foreach ($possibleFirefoxUser in $validFirefoxUsers) {
@@ -163,9 +163,9 @@ if ($firefoxSettings.SearchSuggestEnabled -ne "0" -and $firefoxPreferences.Conta
 
 $firefoxAutoplayPermissions = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Mozilla\Firefox\Permissions\Autoplay -ErrorAction SilentlyContinue
 if ($firefoxAutoplayPermissions -ne $null) {
-    if ($firefoxAutoplayPermissions.Default -ne "block-audio-video" -and $firefoxPreferences.Contains('"media.autoplay.default", "block-audio-video"') -eq $false -and $mozillaCfg.Contains('"media.autoplay.default", "block-audio-video"') -eq $false) { Write-Output "FFOX-00-000021" }
+    if ($firefoxAutoplayPermissions.Default -ne "block-audio-video" -and $firefoxPreferences.Contains('"media.autoplay.default", "block-audio-video"') -eq $false -and $firefoxPreferences.Contains('"media.autoplay.default", 5') -eq $false -and $mozillaCfg.Contains('"media.autoplay.default", "block-audio-video"') -eq $false -and $mozillaCfg.Contains('"media.autoplay.default", 5') -eq $false) { Write-Output "FFOX-00-000021" }
 } else {
-    if ($firefoxPreferences.Contains('"media.autoplay.default", "block-audio-video"') -eq $false -and $mozillaCfg.Contains('"media.autoplay.default", "block-audio-video"') -eq $false) { Write-Output "FFOX-00-000021" }
+    if ($firefoxPreferences.Contains('"media.autoplay.default", "block-audio-video"') -eq $false -and $firefoxPreferences.Contains('"media.autoplay.default", 5') -eq $false -and $mozillaCfg.Contains('"media.autoplay.default", "block-audio-video"') -eq $false -and $mozillaCfg.Contains('"media.autoplay.default", 5') -eq $false) { Write-Output "FFOX-00-000021" }
 }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -180,16 +180,16 @@ if ($firefoxSettings.NetworkPrediction -ne "0" -and $firefoxPreferences.Contains
 # "Firefox fingerprinting protection must be enabled."
 $firefoxTrackingProtection = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\EnableTrackingProtection -ErrorAction SilentlyContinue
 if ($firefoxTrackingProtection -ne $null) {
-    if ($firefoxTrackingProtection.Fingerprinting -ne "1" -and $firefoxPreferences.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -eq $false -and $mozillaCfg.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -eq $false) { Write-Output "FFOX-00-000023" }
+    if ($firefoxTrackingProtection.Fingerprinting -ne "1" -and $firefoxPreferences.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -and $firefoxPreferences.Contains('"privacy.fingerprintingProtection", true') -eq $false -and $mozillaCfg.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -eq $false -and $mozillaCfg.Contains('"privacy.fingerprintingProtection", true') -eq $false) { Write-Output "FFOX-00-000023" }
 } else {
-    if ($firefoxPreferences.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -eq $false -and $mozillaCfg.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -eq $false) { Write-Output "FFOX-00-000023" }
+    if ($firefoxPreferences.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -and $firefoxPreferences.Contains('"privacy.fingerprintingProtection", true') -eq $false -and $mozillaCfg.Contains('"privacy.trackingprotection.fingerprinting.enabled", true') -eq $false -and $mozillaCfg.Contains('"privacy.fingerprintingProtection", true') -eq $false) { Write-Output "FFOX-00-000023" }
 }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "FFOX-00-000024"
 # "Firefox cryptomining protection must be enabled."
-if ($firefoxTrackingProtection.Cryptomining -ne "1" -and $firefoxPreferences.Contains('"privacy.trackingprotection.cryptomining.enabled", true') -eq $false -and $mozillaCfg.Contains('"privacy.trackingprotection.cryptomining.enabled", true') -eq $false) { Write-Output "FFOX-00-000024" }
+if (($firefoxTrackingProtection.Cryptomining -ne "1") -and ($firefoxPreferences.Contains('"privacy.trackingprotection.cryptomining.enabled", false') -eq $true -and $mozillaCfg.Contains('"privacy.trackingprotection.cryptomining.enabled", false') -eq $true)) { Write-Output "FFOX-00-000024" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -201,7 +201,7 @@ if ($firefoxPreferences.Contains('"browser.contentblocking.category", "strict"')
 
 # "FFOX-00-000026"
 # "Firefox extension recommendations must be disabled."
-if ($firefoxPreferences.Contains('"extensions.htmlaboutaddons.recommendations.enabled", false') -eq $false -and $mozillaCfg.Contains('"extensions.htmlaboutaddons.recommendations.enabled", false') -eq $false) { Write-Output "FFOX-00-000026" }
+if (($firefoxPreferences.Contains('"extensions.htmlaboutaddons.recommendations.enabled", false') -eq $false -and $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false') -eq $false) -and ($mozillaCfg.Contains('"extensions.htmlaboutaddons.recommendations.enabled", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false') -eq $false)) { Write-Output "FFOX-00-000026" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -231,9 +231,9 @@ if ($firefoxUserMessaging -ne $null) {
 # "The Firefox New Tab page must not show Top Sites, Sponsored Top Sites, Pocket Recommendations, Sponsored Pocket Stories, Searches, Highlights, or Snippets."
 $firefoxHomePageSettings = Get-ItemProperty -Path HKLM:\Software\Policies\Mozilla\Firefox\HomePage -ErrorAction SilentlyContinue
 if ($firefoxHomePageSettings -ne $null) {
-    if (($firefoxHomePageSettings.TopSites -ne "0" -or $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.topsites", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.topsites", false')) -or ($firefoxHomePageSettings.SponsoredTopSites -ne "0" -or $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSponsoredTopSites", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSponsoredTopSites", false')) -or ($firefoxHomePageSettings.SponsoredPocket -ne "0" -or $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSponsored", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSponsored", false')) -or ($firefoxHomePageSettings.Search -ne "0" -or $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSearch", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSearch", false')) -or ($firefoxHomePageSettings.Highlights -ne "0" -or $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.section.highlights", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.section.highlights", false')) -or ($firefoxHomePageSettings.Snippets -ne "0") -or $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.snippets", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.snippets", false')) { Write-Output "FFOX-00-000029" }
+    if (($firefoxHomePageSettings.TopSites -ne "0" -and $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.topsites", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.topsites", false') -eq $false) -or ($firefoxHomePageSettings.SponsoredTopSites -ne "0" -and $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSponsoredTopSites", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSponsoredTopSites", false') -eq $false) -or ($firefoxHomePageSettings.SponsoredPocket -ne "0" -and $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSponsored", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSponsored", false') -eq $false) -or ($firefoxHomePageSettings.Search -ne "0" -and $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSearch", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSearch", false') -eq $false) -or ($firefoxHomePageSettings.Highlights -ne "0" -and $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.section.highlights", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.section.highlights", false') -eq $false) -or ($firefoxHomePageSettings.Snippets -ne "0" -and $firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.snippets", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.snippets", false') -eq $false)) { Write-Output "FFOX-00-000029" }
 } else {
-    if (($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.topsites", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.topsites", false')) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSponsoredTopSites", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSponsoredTopSites", false')) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSponsored", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSponsored", false')) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSearch", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSearch", false')) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.section.highlights", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.section.highlights", false')) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.snippets", false') -or $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.snippets", false'))) { Write-Output "FFOX-00-000029" }
+    if (($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.topsites", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.topsites", false') -eq $false) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSponsoredTopSites", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSponsoredTopSites", false') -eq $false) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSponsored", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSponsored", false') -eq $false) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.showSearch", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.showSearch", false') -eq $false) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.section.highlights", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.section.highlights", false') -eq $false) -or ($firefoxPreferences.Contains('"browser.newtabpage.activity-stream.feeds.snippets", false') -eq $false -and $mozillaCfg.Contains('"browser.newtabpage.activity-stream.feeds.snippets", false') -eq $false)) { Write-Output "FFOX-00-000029" }
 }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
