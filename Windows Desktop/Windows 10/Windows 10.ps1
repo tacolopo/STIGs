@@ -94,7 +94,7 @@ if ($ntfsCheck -eq $null ) { SilentlyContinue } else { Write-Output "WN10-00-000
 
 # "WN10-00-000055"
 # "Alternate operating systems must not be permitted on the same system."
-$alternateOS = bcdedit /enum all | Out-String
+$alternateOS = & "$env:windir\system32\bcdedit.exe" /enum all | Out-String
 if ($alternateOS.Contains("Windows 11") -or $alternateOS.Contains("Linux")) { Write-Output "WN10-00-000055" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -224,7 +224,7 @@ if ($firewallInboundCheck.Contains('Microsoft Photos')) { Write-Output "WN10-00-
 
 # "WN10-00-000145"
 # "Data Execution Prevention (DEP) must be configured to at least OptOut."
-$optOutTest = bcdedit /enum "{current}" | Out-String
+$optOutTest = & "$env:windir\System32\bcdedit.exe" /enum "{current}" | Out-String
 if ($optOutTest.Contains("OptOut") -eq $false -and $optOutTest.Contains("AlwaysOn") -eq $false) { Write-Output "WN10-00-000145" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
