@@ -1704,7 +1704,7 @@ if ($disallowedDebugProgramsSIDs) { Write-Output "WN10-UR-000065" }
 # Guests group"
 "update root domain"
 $denyAccessToThisComputerSIDs = ($policyContent | Select-String "SeDenyNetworkLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
-$allowedDenyAccessToThisComputerSIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512", "*S-1-5-32-546", "*S-1-5-32-113")
+$allowedDenyAccessToThisComputerSIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512", "*S-1-5-32-546", "*S-1-5-113")
 $disallowedDenyAccessToThisComputerSIDs = $denyAccessToThisComputerSIDs | Where-Object { $_ -notlike $allowedDenyAccessToThisComputerSIDs[0] -and $_ -notlike $allowedDenyAccessToThisComputerSIDs[1] -and $_ -notlike $allowedDenyAccessToThisComputerSIDs[2] -and $_ -notlike $allowedDenyAccessToThisComputerSIDs[3] }
 if ($disallowedDenyAccessToThisComputerSIDs) { Write-Output "WN10-UR-000070" }
 
@@ -1744,7 +1744,7 @@ if ($disallowedDenyLogOnLocallySIDs) { Write-Output "WN10-UR-000085" }
 # "If the following groups or accounts are not defined for the 'Deny log on through Remote Desktop Services' right, this is a finding. Enterprise Admins Group, Domain Admins Group, Local Account, Guests Group"
 "update root domain"
 $denyLogOnThroughRemoteDesktopServicesSIDs = ($policyContent | Select-String "SeDenyRemoteInteractiveLogonRight" | Out-String) -replace '.*=\s*' -split ',' | Where-Object { $_ -match 'S-1-\d+-\d+(-\d+)*' } | ForEach-Object { $_.Trim() }
-$allowedDenyLogOnThroughRemoteDesktopServicesSIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512", "*S-1-5-32-546", "*S-1-5-32-113")
+$allowedDenyLogOnThroughRemoteDesktopServicesSIDs = @("*S-1-5-root domain-519", "*S-1-5-root domain-512", "*S-1-5-32-546", "*S-1-5-113")
 $disallowedDenyLogOnThroughRemoteDesktopServicesSIDs = $denyLogOnThroughRemoteDesktopServicesSIDs | Where-Object { $_ -notlike $allowedDenyLogOnThroughRemoteDesktopServicesSIDs[0] -and $_ -notlike $allowedDenyLogOnThroughRemoteDesktopServicesSIDs[1] -and $_ -notlike $allowedDenyLogOnThroughRemoteDesktopServicesSIDs[2] -and $_ -notlike $allowedDenyLogOnThroughRemoteDesktopServicesSIDs[3] }
 if ($disallowedDenyLogOnThroughRemoteDesktopServicesSIDs) { Write-Output "WN10-UR-000090" }
 
