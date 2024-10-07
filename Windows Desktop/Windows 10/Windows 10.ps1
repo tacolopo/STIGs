@@ -1105,7 +1105,7 @@ if ($passportForWorkChecks.RequireSecurityDevice -ne 1) { Write-Output "WN10-CC-
 # "WN10-CC-000260"
 # "Windows 10 must be configured to require a minimum pin length of six characters or greater."
 $passportPinLength = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\PassportForWork\PINComplexity\
-if ($passportPinLength.MinLength -lt 6) { Write-Output "WN10-CC-000260" }
+if ($passportPinLength.MinimumPINLength -lt 6) { Write-Output "WN10-CC-000260" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1180,7 +1180,7 @@ if ($installerSettings.SafeForScripting -ne 0 -and $installerSettings.SafeForScr
 
 # "WN10-CC-000325"
 # "Automatically signing in the last interactive user after a system-initiated restart must be disabled."
-if ($currentVersionPoliciesSystem.DisableAutomaticRestartSignIn -ne 1) { Write-Output "WN10-CC-000325" }
+if ($currentVersionPoliciesSystem.DisableAutomaticRestartSignOn -ne 1) { Write-Output "WN10-CC-000325" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1193,8 +1193,10 @@ if ($scriptBlockLogging.EnableScriptBlockLogging -ne 1) { Write-Output "WN10-CC-
 
 # "WN10-CC-000328"
 # "The Windows Explorer Preview pane must be disabled for Windows 10."
-if ($webPubWizards.NoPreviewPane -ne 1) { Write-Output "WN10-CC-000328" }
-if ($webPubWizards.NoReadingPane -ne 1) { Write-Output "WN10-CC-000328" }
+$webPubWizardsNoPreviewPaneValue = $webPubWizards.NoPreviewPane 
+if ($webPubWizardsNoPreviewPaneValue -ne 1) { Write-Output "WN10-CC-000328 - $webPubWizardsNoPreviewPaneValue" }
+$webPubWizardsNoReadingPaneValue = $webPubWizards.NoReadingPane
+if ($webPubWizardsNoReadingPaneValue -ne 1) { Write-Output "WN10-CC-000328 - $webPubWizardsNoReadingPaneValue" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1290,9 +1292,9 @@ $systemIsInherited = $hklmSystemACL.IsInherited
 $systemFullControlAdmin = $hklmSystemACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Administrators" }
 $systemReadkeyUsers = $hklmSystemACL | Where-Object { $_.IdentityReference -eq "BUILTIN\Users" }
 
-if ($softwareReadkeyUsers.Contains("ReadKey") -or $systemReadkeyUsers.Contains("ReadKey") -eq $false) { Write-Output "WN10-RG-000005" }
-if ($softwareIsInherited.Contains("True") -or $systemIsInherited.Contains("True") -eq $true) { Write-Output "WN10-RG-000005" }
-if ($softwareFullControlAdmin.Contains("FullControl") -or $systemFullControlAdmin.Contains("FullControl") -eq $false) { Write-Output "WN10-RG-000005" }
+if ($softwareReadkeyUsers.Contains("ReadKey") -eq $false -or $systemReadkeyUsers.Contains("ReadKey") -eq $false) { Write-Output "WN10-RG-000005" }
+if ($softwareIsInherited.Contains("True") -eq $true -or $systemIsInherited.Contains("True") -eq $true) { Write-Output "WN10-RG-000005" }
+if ($softwareFullControlAdmin.Contains("FullControl") -eq $false -or $systemFullControlAdmin.Contains("FullControl") -eq $false) { Write-Output "WN10-RG-000005" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1463,7 +1465,8 @@ if ($pku2LSAChecks.AllowOnlineID -ne 0) { Write-Output "WN10-SO-000185" }
 
 # "WN10-SO-000190"
 # "Kerberos encryption types must be configured to prevent the use of DES and RC4 encryption suites."
-if ($certificateDeviceAuthCheck.SupportedEncryptionTypes -ne "2147483640") { Write-Output "WN10-SO-000190" }
+$certificateDeviceAuthCheckSupportedEncryptionTypes = $certificateDeviceAuthCheck.SupportedEncryptionTypes
+if ($certificateDeviceAuthCheckSupportedEncryptionTypes -ne "2147483640") { Write-Output "WN10-SO-000190 - $certificateDeviceAuthCheckSupportedEncryptionTypes" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1501,7 +1504,8 @@ if ($msv1LSAChecks.NTLMMinServerSec -ne 537395200) { Write-Output "WN10-SO-00022
 # "WN10-SO-000230"
 # "The system must be configured to use FIPS-compliant algorithms for encryption, hashing, and signing."
 $fipsAlgorithmPolicy = Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy\
-if ($fipsAlgorithmPolicy.Enabled -ne 1) { Write-Output "WN10-SO-000230" }
+$fipsAlgorithmPolicyEnabled = $fipsAlgorithmPolicy.Enabled
+if ($fipsAlgorithmPolicyEnabled -ne 1) { Write-Output "WN10-SO-000230 - $fipsAlgorithmPolicyEnabled" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1530,9 +1534,10 @@ if ($currentVersionPoliciesSystem.ConsentPromptBehaviorAdmin -ne 2) { Write-Outp
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
+# "Dev"
 # "WN10-SO-000255"
 # "User Account Control must automatically deny elevation requests for standard users."
-if ($currentVersionPoliciesSystem.ConsentPromptBehaviorUser -ne 0) { Write-Output "WN10-SO-000255" }
+# if ($currentVersionPoliciesSystem.ConsentPromptBehaviorUser -ne 0) { Write-Output "WN10-SO-000255" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
