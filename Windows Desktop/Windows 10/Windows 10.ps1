@@ -87,8 +87,8 @@ if ($defender.Contains('Running Microsoft Defender Antivirus') -eq $false) { Wri
 # "WN10-00-000050"
 # "Local volumes must be formatted using NTFS."
 $ntfs = Get-Volume
-$ntfsCheck = foreach ($volume in $ntfs) { if ($volume.FileSystemType -ne 'NTFS') { Write-Output "Fail" } }
-if ($ntfsCheck -eq $null ) { SilentlyContinue } else { Write-Output "WN10-00-000050" }
+$ntfsCheck = foreach ($volume in $ntfs) { if ($volume.FileSystemType -ne 'NTFS') { Write-Output "$($volume.FileSystemType), $($volume.SizeRemaining), $($volume.OperationalStatus)" } }
+if ($ntfsCheck -eq $null -or $ntfsCheck -eq "") { SilentlyContinue } else { Write-Output "WN10-00-000050 - $ntfsCheck" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -217,7 +217,6 @@ if ($windowsFirewall.Contains('Running Windows Defender Firewall') -eq $false) {
 
 # "WN10-00-000140"
 # "Inbound exceptions to the firewall on Windows 10 domain workstations must only allow authorized remote management hosts."
-# "Currently no policies on what is allowed"
 $firewallInboundCheck = Get-NetFirewallRule -Direction Inbound | Format-Table -Property Name, DisplayName, Enabled, Action, Protocol, LocalPort, RemotePort | Out-String
 if ($firewallInboundCheck.Contains('Microsoft Photos')) { Write-Output "WN10-00-000140" }
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -278,11 +277,11 @@ $policyContent = Get-Content $exportPath
 $sidLines = $policyContent | Select-String "Se"
 $unresolvedSids = $sidLines | Where-Object { $_ -match 'S-1-' }
 
-Import-Module ActiveDirectory
+# Import-Module ActiveDirectory
 
 # Get all AD users and groups and their SIDs
-Get-ADUser -Filter * -Property SID | Select-Object -Property Name, SID
-Get-ADGroup -Filter * -Property SID | Select-Object -Property Name, SID
+# Get-ADUser -Filter * -Property SID | Select-Object -Property Name, SID
+# Get-ADGroup -Filter * -Property SID | Select-Object -Property Name, SID
 
 
 
@@ -388,63 +387,63 @@ if ($bluetoothStatus -ne $null -and $bluetoothStatus.Contains('Enabled') -eq $tr
 # "WN10-AC-000005"
 # "account lockout duration must be configured to 15 minutes or greater"
 $lockoutDuractionCheck = $policyContent | Select-String "LockoutDuration" | Out-String
-if ($lockoutDuractionCheck.Contains('900') -eq $false) { Write-Output "WN10-AC-000005"; Write-Output $lockoutDuractionCheck }
+if ($lockoutDuractionCheck.Contains('900') -eq $false) { Write-Output "WN10-AC-000005 - $lockoutDuractionCheck" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-AC-000010"
 # "The number of allowed bad logon attempts must be configured to 3 or less."
 $lockoutBadCountCheck = $policyContent | Select-String "LockoutBadCount" | Out-String
-if ($lockoutBadCountCheck.Contains('3') -eq $false) { Write-Output "WN10-AC-000010"; Write-Output $lockoutBadCountCheck }
+if ($lockoutBadCountCheck.Contains('3') -eq $false) { Write-Output "WN10-AC-000010 - $lockoutBadCountCheck" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-AC-000015"
 # "The period of time before the bad logon counter is reset must be configured to 15 minutes."
 $lockoutCounterReset = $policyContent | Select-String "ResetLockoutCount" | Out-String
-if ($lockoutCounterReset.Contains('900') -eq $false) { Write-Output "WN10-AC-000015"; Write-Output $lockoutCounterReset }
+if ($lockoutCounterReset.Contains('900') -eq $false) { Write-Output "WN10-AC-000015 - $lockoutCounterReset" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-AC-000020"
 # "The password history must be configured to 24 passwords remembered."
 $passwordHistorySize = $policyContent | Select-String "PasswordHistorySize" | Out-String
-if ($passwordHistorySize.Contains('24') -eq $false) { Write-Output "WN10-AC-000020"; Write-Output $passwordHistorySize }
+if ($passwordHistorySize.Contains('24') -eq $false) { Write-Output "WN10-AC-000020 - $passwordHistorySize" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-AC-000025"
 # "The maximum password age must be configured to 60 days or less."
 $maxPasswordAge = $policyContent | Select-String "MaximumPasswordAge" | Out-String
-if ($maxPasswordAge.Contains('60') -eq $false) { Write-Output "WN10-AC-000025"; Write-Output $maxPasswordAge }
+if ($maxPasswordAge.Contains('60') -eq $false) { Write-Output "WN10-AC-000025 - $maxPasswordAge" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-AC-000030"
 # "The minimum password age must be configured to at least 1 day."
 $minPasswordAge = $policyContent | Select-String "MinimumPasswordAge" | Out-String
-if ($minPasswordAge.Contains('1') -eq $false) { Write-Output "WN10-AC-000030"; Write-Output $minPasswordAge }
+if ($minPasswordAge.Contains('1') -eq $false) { Write-Output "WN10-AC-000030 - $minPasswordAge" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-AC-000035"
 # "Passwords must, at a minimum, be 14 characters."
 $minPasswordLength = $policyContent | Select-String "MinimumPasswordLength" | Out-String
-if ($minPasswordLength.Contains('14') -eq $false) { Write-Output "WN10-AC-000035"; Write-Output $minPasswordLength }
+if ($minPasswordLength.Contains('14') -eq $false) { Write-Output "WN10-AC-000035 - $minPasswordLength" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-AC-000040"
 # "The built-in Microsoft password complexity filter must be enabled."
 $passwordComplexityFilter = $policyContent | Select-String "PasswordComplexity" | Out-String
-if ($passwordComplexityFilter.Contains('1') -eq $false) { Write-Output "WN10-AC-000040"; Write-Output $passwordComplexityFilter }
+if ($passwordComplexityFilter.Contains('1') -eq $false) { Write-Output "WN10-AC-000040 - $passwordComplexityFilter" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 # "WN10-AC-000045"
 # "Reversible password encryption must be disabled."
 $reversiblePasswordEncryption = $policyContent | Select-String "ClearTextPassword" | Out-String
-if ($reversiblePasswordEncryption.Contains('0') -eq $false) { Write-Output "WN10-AC-000045"; Write-Output $reversiblePasswordEncryption }
+if ($reversiblePasswordEncryption.Contains('0') -eq $false) { Write-Output "WN10-AC-000045 - $reversiblePasswordEncryption" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -487,7 +486,8 @@ if ($credentialValidationCheck.Contains('Success') -eq $false) { Write-Output "W
 # "WN10-AU-000050, WN10-AU-000585"
 # "The system must be configured to audit Detailed Tracking - Process Creation successes and failures."
 $procCreationCheck = $auditPolicyAll | Select-String "Process Creation" | Out-String
-if ($procCreationCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000050, WN10-AU-000585" }
+if ($procCreationCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000050" }
+if ($procCreationCheck.Contains('Failure') -eq $false) { Write-Output "WN10-AU-000585" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -713,7 +713,8 @@ if ($otherPolicyChangeEventsCheck.Contains('Failure') -eq $false) { Write-Output
 # "WN10-AU-000560, WN10-AU-000565"
 # "Windows 10 must be configured to audit other Logon/Logoff Events Successes and Failures."
 $otherLogonLogoffEventsCheck = $auditPolicyAll | Select-String "Other Logon/Logoff Events" | Out-String
-if ($otherLogonLogoffEventsCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000560, WN10-AU-000565" }
+if ($otherLogonLogoffEventsCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000560" }
+if ($otherLogonLogoffEventsCheck.Contains('Failure') -eq $false) { Write-Output "WN10-AU-000565" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -727,7 +728,8 @@ if ($detailedFileShareCheck.Contains('Failure') -eq $false) { Write-Output "WN10
 # "WN10-AU-000575, WN10-AU-000580"
 # "Windows 10 must be configured to audit MPSSVC Rule-Level Policy Change Successes."
 $mpssvcRuleLevelPolicyChangeCheck = $auditPolicyAll | Select-String "MPSSVC Rule-Level Policy Change" | Out-String
-if ($mpssvcRuleLevelPolicyChangeCheck.Contains('Success and Failure') -eq $false) { Write-Output "WN10-AU-000575, WN10-AU-000580" }
+if ($mpssvcRuleLevelPolicyChangeCheck.Contains('Success') -eq $false) { Write-Output "WN10-AU-000575" }
+if ($mpssvcRuleLevelPolicyChangeCheck.Contains('Failure') -eq $false) { Write-Output "WN10-AU-000580" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -741,7 +743,8 @@ if ($cameraAccessFromLockScreen.NoLockScreenCamera -ne 1) { Write-Output "WN10-C
 # "WN10-CC-000007"
 # "Windows 10 must cover or disable the built-in or attached camera when not in use."
 $cameraDisableCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\webcam
-if ($cameraDisableCheck.Value -ne 'Deny') { Write-Output "WN10-CC-000007" }
+$cameraDisableCheckValue = $cameraDisableCheck.Value
+if ($cameraDisableCheckValue -ne 'Deny') { Write-Output "WN10-CC-000007 - $cameraDisableCheckValue" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -825,7 +828,8 @@ if ($eccCurvesValue.Contains('NistP384') -eq $false -or $eccCurvesValue.Contains
 # "WN10-CC-000055"
 # "Simultaneous connections to the internet or a Windows domain must be limited."
 $simultaneousConnectionsCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\WcmSvc\GroupPolicy\
-if ($simultaneousConnectionsCheck.fMinimizeConnections -ne 3) { Write-Output "WN10-CC-000055" }
+$simultaneousConnectionsCheckConnectionsValue = $simultaneousConnectionsCheck.fMinimizeConnections  
+if ($simultaneousConnectionsCheckConnectionsValue -ne 3) { Write-Output "WN10-CC-000055 - $simultaneousConnectionsCheckConnectionsValue" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1008,7 +1012,8 @@ if ($credUIPoliciesCheck.EnumerateAdministrators -ne 0) { Write-Output "WN10-CC-
 # "WN10-CC-000204"
 # "If Enhanced diagnostic data is enabled it must be limited to the minimum required to support Windows Analytics."
 $dataCollectionSettings = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection\
-if ($dataCollectionSettings.LimitEnhancedDiagnosticDataWindowsAnalytics -ne 1) { Write-Output "WN10-CC-000204" }
+$dataCollectionSettingsLimitEnhancedDiagnosticDataWindowsAnalyticsValue = $dataCollectionSettings.LimitEnhancedDiagnosticDataWindowsAnalytics   
+if ($dataCollectionSettingsLimitEnhancedDiagnosticDataWindowsAnalyticsValue -ne 1) { Write-Output "WN10-CC-000204 - $dataCollectionSettingsLimitEnhancedDiagnosticDataWindowsAnalyticsValue" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
@@ -1065,7 +1070,8 @@ if ($phishingFilterCheck.PreventOverrideAppRepUnknown -ne 1) { Write-Output "WN1
 # "WN10-CC-000238"
 # "Windows 10 must be configured to prevent certificate error overrides in Microsoft Edge."
 $edgeInternetSettingsCheck = Get-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Internet` Settings\
-if ($edgeInternetSettingsCheck.PreventCertErrorOverrides -ne 1) { Write-Output "WN10-CC-000238" }
+$edgeInternetSettingsCheckPreventCertErrorOverridesValue = $edgeInternetSettingsCheck.PreventCertErrorOverrides 
+if ($edgeInternetSettingsCheckPreventCertErrorOverridesValue -ne 1) { Write-Output "WN10-CC-000238 - $edgeInternetSettingsCheckPreventCertErrorOverridesValue" }
 
 "----------------------------------------------------------------------------------------------------------------------------------------------------------"
 
