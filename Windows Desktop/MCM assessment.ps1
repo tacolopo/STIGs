@@ -1,5 +1,5 @@
 $outputFileName = "windows10_assessment_complete_data.txt"
-$directoryPath = "\\onenet\home\Admin\Logging\Cyber\Win10Tier3"
+$directoryPath = "\Win10Tier3"
 #change to your username
 $outputFilePath = "C:\"
 
