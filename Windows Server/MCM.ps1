@@ -1,6 +1,6 @@
 #build file and start transcript 
 $hostnameForFile = $env:COMPUTERNAME
-$transcriptPath = "\\onenet\home\Admin\Logging\Cyber\WinServerTier3\$hostnameForFile.txt"
+$transcriptPath = "$hostnameForFile.txt"
 Start-Transcript -Path $transcriptPath -Force
 
 
